@@ -1,0 +1,18 @@
+{
+  "name": "jdp",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@digitalsdk/cli": "^10.13.1",
+    "@jutro/cli": "^8.13.12",
+    "@jutro/cli-internal": "^10.13.1",
+    "@jutro/create-app": "^10.13.1"
+  }
+}

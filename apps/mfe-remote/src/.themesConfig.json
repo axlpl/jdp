@@ -1,0 +1,9 @@
+{
+  "sampleTheme": {
+    "name": "sampleTheme",
+    "tokens": {
+      "input-path": "src/styles/tokens/**/*.json",
+      "output-file-name": "generated-themes/tokenOverrides.css"
+    }
+  }
+}

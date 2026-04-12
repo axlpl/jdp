@@ -1,0 +1,2 @@
+# UI generated from Jutro metadata
+Jutro gives you the option of defining your page DOM in a JSON file instead of JSX. You can define nested containers, components, and behaviors. You can also reuse components with a `@ref` or `@ref:` instruction.

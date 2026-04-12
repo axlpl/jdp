@@ -1,0 +1,10 @@
+.settingsCard {
+  &.settingsCardContainer {
+    border: none;
+    box-shadow: var(--GW-SHADOW-2);
+  }
+
+  .settingsCardContent {
+    padding-top: var(--GW-LAYOUT-3);
+  }
+}
