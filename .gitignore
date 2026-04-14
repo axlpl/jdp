@@ -5,6 +5,7 @@ node_modules/
 
 # npm registry credentials (contains Artifactory auth token!)
 .npmrc
+.claude/
 
 # build output
 dist/
