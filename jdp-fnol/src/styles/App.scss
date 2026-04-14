@@ -1,0 +1,25 @@
+body {
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.inlineWithIndent {
+    > * {
+        display: inline-block;
+
+        &:not(:last-child) {
+            margin-right: var(--GW-SPACING-4);
+        }
+    }
+}
+
+// Hide the OOB divider above WizardActionBar and add breathing room before footer.
+[data-testid='wizard-action-bar-wrapper'] {
+    margin-top: var(--GW-LAYOUT-4);
+    margin-bottom: var(--GW-LAYOUT-8);
+}
+
+[data-testid='wizard-action-bar-wrapper'] > div:first-child {
+    display: none;
+}

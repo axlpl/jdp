@@ -1,0 +1,9 @@
+.progressBand {
+    padding: var(--GW-LAYOUT-8) 0 var(--GW-LAYOUT-6);
+}
+
+@media (max-width: 768px) {
+    .progressBand {
+        padding: var(--GW-LAYOUT-6) 0 var(--GW-LAYOUT-4);
+    }
+}

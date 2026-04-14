@@ -1,4 +1,0 @@
-{
-  "include": ["./src/**/*", "./typings.d.ts"],
-  "exclude": ["node_modules"]
-}

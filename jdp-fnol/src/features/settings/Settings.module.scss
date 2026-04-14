@@ -1,0 +1,58 @@
+.settings {
+    padding: var(--GW-LAYOUT-8) 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--GW-LAYOUT-6);
+    box-sizing: border-box;
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--GW-LAYOUT-2);
+}
+
+.title {
+    margin: 0;
+}
+
+.subtitle {
+    margin: 0;
+    color: var(--GW-TEXT-COLOR-2);
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--GW-LAYOUT-3);
+}
+
+.sectionDescription {
+    margin: 0;
+    color: var(--GW-TEXT-COLOR-2);
+    font-size: var(--GW-FONT-SIZE-BODY);
+}
+
+.aboutList {
+    display: grid;
+    grid-template-columns: minmax(200px, auto) 1fr;
+    gap: var(--GW-LAYOUT-2) var(--GW-LAYOUT-5);
+    margin: 0;
+}
+
+.aboutLabel {
+    color: var(--GW-TEXT-COLOR-2);
+    font-weight: 600;
+}
+
+.aboutValue {
+    margin: 0;
+    color: var(--GW-TEXT-COLOR-1);
+}
+
+@media (max-width: 480px) {
+    .aboutList {
+        grid-template-columns: 1fr;
+        gap: var(--GW-LAYOUT-1);
+    }
+}

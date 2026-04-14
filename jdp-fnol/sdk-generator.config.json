@@ -1,0 +1,18 @@
+{
+    "generators": [
+        {
+            "name": "PcSdk",
+            "target": "PC",
+            "targetUrl": "",
+            "disableSchemaGeneration": false,
+            "skipCompositeGeneration": false
+        },
+        {
+            "name": "CcSdk",
+            "target": "CC",
+            "targetUrl": "",
+            "disableSchemaGeneration": false,
+            "skipCompositeGeneration": false
+        }
+    ]
+}

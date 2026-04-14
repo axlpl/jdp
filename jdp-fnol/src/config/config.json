@@ -1,0 +1,16 @@
+{
+  "localeSettings": {
+    "availableLocales": ["en-US", "en-GB", "es-ES", "de-DE", "pl-PL"],
+    "availableLanguages": ["en", "es", "de", "pl"],
+    "preferredLocale": "en-US",
+    "preferredLanguage": "en",
+    "defaultCountryCode": "US",
+    "defaultCurrency": "USD"
+  },
+  "accessibleDisabled": {
+    "button": true,
+    "fields": true,
+    "iconButton": true,
+    "tabs": true
+  }
+}
