@@ -1,64 +1,74 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Button, InfoLabel } from '@jutro/components';
-import { DataTable, DisplayColumn } from '@jutro/legacy/datatable';
+import { Button, useModal } from '@jutro/components';
+import { InputField } from '@jutro/legacy/components';
+import { Grid, GridItem } from '@jutro/layout';
 import { useTranslator } from '@jutro/locale';
 
 import { PageLayout } from '../../components/PageLayout';
-import type { Policy, PolicyStatus } from '../../types/domain';
-import { formatDate } from '../../utils/date';
+import type { Policy } from '../../types/domain';
+import { useFnol } from '../fnol/FnolContext';
 import { usePolicies } from '../policies/PoliciesContext';
 
 import messages from './Dashboard.messages';
+import { PolicyCard } from './PolicyCard';
 
 import styles from './Dashboard.module.scss';
 
-type InfoLabelVariant = 'success' | 'warning' | 'error';
+const matchesQuery = (policy: Policy, query: string): boolean => {
+    if (!query) {
+        return true;
+    }
+    const q = query.toLowerCase();
+    const haystack = [
+        policy.policyNumber,
+        policy.productName,
+        policy.vehicleDescription,
+        policy.licensePlate,
+        policy.accountHolderName,
+        policy.status,
+    ]
+        .join(' ')
+        .toLowerCase();
 
-const STATUS_VARIANT: Record<PolicyStatus, InfoLabelVariant> = {
-    'In Force': 'success',
-    Scheduled: 'warning',
-    Expired: 'error',
-    Cancelled: 'error',
+    return haystack.includes(q);
 };
-
-const renderPeriod = (row: Policy): string =>
-    `${formatDate(row.effectiveDate)} – ${formatDate(row.expirationDate)}`;
-
-const renderStatus = (row: Policy): JSX.Element => (
-    <InfoLabel type={STATUS_VARIANT[row.status]} message={row.status} />
-);
 
 export const Dashboard = () => {
     const translator = useTranslator();
     const history = useHistory();
+    const { showConfirm } = useModal();
     const { policies, status, reload } = usePolicies();
+    const { hasDraft, reset: resetDraft } = useFnol();
+    const [query, setQuery] = useState('');
+
+    const handleContinueDraft = useCallback(() => {
+        history.push('/fnol/new');
+    }, [history]);
+
+    const handleDiscardDraft = useCallback(async () => {
+        const result = await showConfirm({
+            status: 'warning',
+            title: messages.draftDiscardTitle,
+            message: messages.draftDiscardBody,
+            confirmButtonText: messages.draftDiscardConfirm,
+            cancelButtonText: messages.draftDiscardCancel,
+        });
+
+        if (result === 'CONFIRM') {
+            resetDraft();
+        }
+    }, [showConfirm, resetDraft]);
+
+    const filteredPolicies = useMemo(
+        () => policies.filter(p => matchesQuery(p, query.trim())),
+        [policies, query]
+    );
 
     const handleGlobalFileClaim = useCallback(() => {
         history.push('/fnol/new');
     }, [history]);
-
-    const handleFileClaimForPolicy = useCallback(
-        (row: Policy) => {
-            history.push(
-                `/fnol/new?policyNumber=${encodeURIComponent(row.policyNumber)}`
-            );
-        },
-        [history]
-    );
-
-    const renderActions = useCallback(
-        (row: Policy) => (
-            <Button
-                id={`fileClaim-${row.policyNumber}`}
-                variant="secondary"
-                onClick={() => handleFileClaimForPolicy(row)}
-                label={translator(messages.fileAClaim)}
-            />
-        ),
-        [handleFileClaimForPolicy, translator]
-    );
 
     const renderBody = () => {
         if (status === 'loading' || status === 'idle') {
@@ -83,56 +93,36 @@ export const Dashboard = () => {
             );
         }
 
+        if (policies.length === 0) {
+            return (
+                <div className={styles.status}>
+                    {translator(messages.emptyState)}
+                </div>
+            );
+        }
+
+        if (filteredPolicies.length === 0) {
+            return (
+                <div className={styles.status}>
+                    {translator(messages.searchEmpty)}
+                </div>
+            );
+        }
+
         return (
-            <DataTable
-                id="policiesTable"
-                data={policies}
-                showSearch
-                showPagination
-                pageSizeOptions={[10, 25, 50]}
-                tableLabel={translator(messages.pageTitle)}
-                noDataText={translator(messages.emptyState)}
+            <Grid
+                gap="large"
+                columns={['1fr', '1fr', '1fr']}
+                tablet={{ columns: ['1fr', '1fr'] }}
+                phoneWide={{ columns: ['1fr'] }}
+                phone={{ columns: ['1fr'] }}
             >
-                <DisplayColumn
-                    id="policyNumber"
-                    header={translator(messages.colPolicyNumber)}
-                    path="policyNumber"
-                    sortable
-                />
-                <DisplayColumn
-                    id="productName"
-                    header={translator(messages.colProduct)}
-                    path="productName"
-                    sortable
-                />
-                <DisplayColumn
-                    id="vehicleDescription"
-                    header={translator(messages.colVehicle)}
-                    path="vehicleDescription"
-                    sortable
-                />
-                <DisplayColumn
-                    id="licensePlate"
-                    header={translator(messages.colPlate)}
-                    path="licensePlate"
-                />
-                <DisplayColumn
-                    id="period"
-                    header={translator(messages.colPeriod)}
-                    renderCell={renderPeriod}
-                />
-                <DisplayColumn
-                    id="status"
-                    header={translator(messages.colStatus)}
-                    renderCell={renderStatus}
-                />
-                <DisplayColumn
-                    id="actions"
-                    header={translator(messages.colActions)}
-                    renderCell={renderActions}
-                    textAlign="right"
-                />
-            </DataTable>
+                {filteredPolicies.map(policy => (
+                    <GridItem key={policy.policyNumber}>
+                        <PolicyCard policy={policy} />
+                    </GridItem>
+                ))}
+            </Grid>
         );
     };
 
@@ -155,6 +145,56 @@ export const Dashboard = () => {
                         label={translator(messages.fileAClaim)}
                     />
                 </header>
+
+                {hasDraft && (
+                    <div className={styles.draftBanner}>
+                        <div className={styles.draftBannerText}>
+                            <h3 className={styles.draftBannerTitle}>
+                                {translator(messages.draftBannerTitle)}
+                            </h3>
+                            <p className={styles.draftBannerBody}>
+                                {translator(messages.draftBannerBody)}
+                            </p>
+                        </div>
+                        <div className={styles.draftBannerActions}>
+                            <Button
+                                id="continueDraft"
+                                onClick={handleContinueDraft}
+                                label={translator(
+                                    messages.draftBannerContinue
+                                )}
+                            />
+                            <Button
+                                id="discardDraft"
+                                variant="tertiary"
+                                onClick={handleDiscardDraft}
+                                label={translator(messages.draftBannerDiscard)}
+                            />
+                        </div>
+                    </div>
+                )}
+
+                {status === 'success' && policies.length > 0 && (
+                    <div className={styles.toolbar}>
+                        <div className={styles.searchWrapper}>
+                            <InputField
+                                id="policiesSearch"
+                                hideLabel
+                                label={messages.searchPlaceholder}
+                                placeholder={messages.searchPlaceholder}
+                                value={query}
+                                onValueChange={(value: string) =>
+                                    setQuery(value ?? '')
+                                }
+                            />
+                        </div>
+                        <span className={styles.resultsCount}>
+                            {translator(messages.resultsCount, {
+                                count: filteredPolicies.length,
+                            })}
+                        </span>
+                    </div>
+                )}
 
                 {renderBody()}
             </div>

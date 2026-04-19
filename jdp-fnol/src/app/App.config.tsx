@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Footer } from '../components/Footer';
 import { HelpPopoverItems } from '../components/HelpPopoverItems';
+import { triggerLogout } from '../features/auth/authActions';
 import { Dashboard } from '../features/dashboard/Dashboard';
 import { ConfirmationPage } from '../features/fnol/ConfirmationPage';
 import { FnolWizard } from '../features/fnol/FnolWizard';
@@ -63,6 +64,11 @@ const floorPlanConfig = {
                 {
                     title: messages.avatarSettings,
                     to: '/settings',
+                },
+                {
+                    title: messages.avatarLogout,
+                    to: '/',
+                    onClick: triggerLogout,
                 },
             ],
             showNotifications: false,

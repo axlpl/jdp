@@ -29,6 +29,10 @@ export default defineMessages({
         id: 'jdp.fnol.step.date.label',
         defaultMessage: 'Date of loss',
     },
+    stepTimeLabel: {
+        id: 'jdp.fnol.step.date.timeLabel',
+        defaultMessage: 'Time of loss (optional)',
+    },
     stepDateErrorFuture: {
         id: 'jdp.fnol.step.date.error.future',
         defaultMessage: 'Date of loss cannot be in the future.',
@@ -62,6 +66,274 @@ export default defineMessages({
     stepCauseRequired: {
         id: 'jdp.fnol.step.cause.required',
         defaultMessage: 'Please select a loss cause to continue.',
+    },
+    stepDetailsTitle: {
+        id: 'jdp.fnol.step.details.title',
+        defaultMessage: 'Loss details',
+    },
+    stepDetailsHeading: {
+        id: 'jdp.fnol.step.details.heading',
+        defaultMessage: 'Tell us what happened.',
+    },
+    stepDetailsDescriptionLabel: {
+        id: 'jdp.fnol.step.details.descriptionLabel',
+        defaultMessage: 'What happened?',
+    },
+    stepDetailsDescriptionPlaceholder: {
+        id: 'jdp.fnol.step.details.descriptionPlaceholder',
+        defaultMessage: 'Briefly describe the incident.',
+    },
+    stepDetailsLocationLabel: {
+        id: 'jdp.fnol.step.details.locationLabel',
+        defaultMessage: 'Where did it happen?',
+    },
+    stepDetailsLocationPlaceholder: {
+        id: 'jdp.fnol.step.details.locationPlaceholder',
+        defaultMessage: 'Street, city, or intersection',
+    },
+    stepDetailsRequired: {
+        id: 'jdp.fnol.step.details.required',
+        defaultMessage: 'Please describe what happened and where.',
+    },
+    stepDetailsImpactLabel: {
+        id: 'jdp.fnol.step.details.impactLabel',
+        defaultMessage: 'Point of impact',
+    },
+    stepDetailsImpactFront: {
+        id: 'jdp.fnol.step.details.impactFront',
+        defaultMessage: 'Front',
+    },
+    stepDetailsImpactRear: {
+        id: 'jdp.fnol.step.details.impactRear',
+        defaultMessage: 'Rear',
+    },
+    stepDetailsImpactLeft: {
+        id: 'jdp.fnol.step.details.impactLeft',
+        defaultMessage: 'Left side',
+    },
+    stepDetailsImpactRight: {
+        id: 'jdp.fnol.step.details.impactRight',
+        defaultMessage: 'Right side',
+    },
+    stepDetailsImpactMultiple: {
+        id: 'jdp.fnol.step.details.impactMultiple',
+        defaultMessage: 'Multiple / unclear',
+    },
+    stepDetailsDriveableLabel: {
+        id: 'jdp.fnol.step.details.driveableLabel',
+        defaultMessage: 'Is the vehicle driveable?',
+    },
+    stepDetailsPhoneLabel: {
+        id: 'jdp.fnol.step.details.phoneLabel',
+        defaultMessage: 'Contact phone number',
+    },
+    stepDetailsPhonePlaceholder: {
+        id: 'jdp.fnol.step.details.phonePlaceholder',
+        defaultMessage: 'e.g. +1 555 123 4567',
+    },
+    stepOtherTitle: {
+        id: 'jdp.fnol.step.other.title',
+        defaultMessage: 'Other details',
+    },
+    stepOtherOptional: {
+        id: 'jdp.fnol.step.other.optional',
+        defaultMessage: 'Optional',
+    },
+    stepOtherHeading: {
+        id: 'jdp.fnol.step.other.heading',
+        defaultMessage:
+            'Add injury, report, or witness details — skip if not applicable.',
+    },
+    stepOtherInjuriesLabel: {
+        id: 'jdp.fnol.step.other.injuriesLabel',
+        defaultMessage: 'Was anyone injured?',
+    },
+    stepOtherInjuryDescriptionLabel: {
+        id: 'jdp.fnol.step.other.injuryDescriptionLabel',
+        defaultMessage: 'Injury description',
+    },
+    stepOtherPoliceCalledLabel: {
+        id: 'jdp.fnol.step.other.policeCalledLabel',
+        defaultMessage: 'Were the police called?',
+    },
+    stepOtherPoliceReportLabel: {
+        id: 'jdp.fnol.step.other.policeReportLabel',
+        defaultMessage: 'Police report number',
+    },
+    stepOtherOtherPartyHeading: {
+        id: 'jdp.fnol.step.other.otherPartyHeading',
+        defaultMessage: 'Other party (if applicable)',
+    },
+    stepOtherOtherPartyName: {
+        id: 'jdp.fnol.step.other.otherPartyName',
+        defaultMessage: 'Name',
+    },
+    stepOtherOtherPartyPhone: {
+        id: 'jdp.fnol.step.other.otherPartyPhone',
+        defaultMessage: 'Phone',
+    },
+    stepOtherOtherPartyInsurer: {
+        id: 'jdp.fnol.step.other.otherPartyInsurer',
+        defaultMessage: 'Insurer',
+    },
+    stepOtherOtherPartyPlate: {
+        id: 'jdp.fnol.step.other.otherPartyPlate',
+        defaultMessage: 'License plate',
+    },
+    stepOtherPhotosHeading: {
+        id: 'jdp.fnol.step.other.photosHeading',
+        defaultMessage: 'Photos',
+    },
+    stepOtherPhotosHint: {
+        id: 'jdp.fnol.step.other.photosHint',
+        defaultMessage:
+            'Attach photos of the damage, scene or documents. Files stay on your device until submission.',
+    },
+    stepOtherWitnessesLabel: {
+        id: 'jdp.fnol.step.other.witnessesLabel',
+        defaultMessage: 'Witness details',
+    },
+    stepReviewTitle: {
+        id: 'jdp.fnol.step.review.title',
+        defaultMessage: 'Review and confirm',
+    },
+    stepReviewHeading: {
+        id: 'jdp.fnol.step.review.heading',
+        defaultMessage:
+            'Review your claim before submitting. You can still go back to edit.',
+    },
+    reviewSectionPolicy: {
+        id: 'jdp.fnol.review.section.policy',
+        defaultMessage: 'Policy',
+    },
+    reviewSectionIncident: {
+        id: 'jdp.fnol.review.section.incident',
+        defaultMessage: 'Incident',
+    },
+    reviewSectionOther: {
+        id: 'jdp.fnol.review.section.other',
+        defaultMessage: 'Other details',
+    },
+    reviewFieldPolicyNumber: {
+        id: 'jdp.fnol.review.field.policyNumber',
+        defaultMessage: 'Policy number',
+    },
+    reviewFieldVehicle: {
+        id: 'jdp.fnol.review.field.vehicle',
+        defaultMessage: 'Vehicle',
+    },
+    reviewFieldDate: {
+        id: 'jdp.fnol.review.field.date',
+        defaultMessage: 'Date of loss',
+    },
+    reviewFieldTime: {
+        id: 'jdp.fnol.review.field.time',
+        defaultMessage: 'Time of loss',
+    },
+    reviewFieldImpact: {
+        id: 'jdp.fnol.review.field.impact',
+        defaultMessage: 'Point of impact',
+    },
+    reviewFieldDriveable: {
+        id: 'jdp.fnol.review.field.driveable',
+        defaultMessage: 'Vehicle driveable',
+    },
+    reviewFieldReporterPhone: {
+        id: 'jdp.fnol.review.field.reporterPhone',
+        defaultMessage: 'Contact phone',
+    },
+    reviewFieldPoliceCalled: {
+        id: 'jdp.fnol.review.field.policeCalled',
+        defaultMessage: 'Police called',
+    },
+    reviewFieldOtherPartyName: {
+        id: 'jdp.fnol.review.field.otherPartyName',
+        defaultMessage: 'Other party — name',
+    },
+    reviewFieldOtherPartyPhone: {
+        id: 'jdp.fnol.review.field.otherPartyPhone',
+        defaultMessage: 'Other party — phone',
+    },
+    reviewFieldOtherPartyInsurer: {
+        id: 'jdp.fnol.review.field.otherPartyInsurer',
+        defaultMessage: 'Other party — insurer',
+    },
+    reviewFieldOtherPartyPlate: {
+        id: 'jdp.fnol.review.field.otherPartyPlate',
+        defaultMessage: 'Other party — plate',
+    },
+    reviewFieldPhotos: {
+        id: 'jdp.fnol.review.field.photos',
+        defaultMessage: 'Photos attached',
+    },
+    saveAndExit: {
+        id: 'jdp.fnol.saveAndExit',
+        defaultMessage: 'Save & exit',
+    },
+    submitClaim: {
+        id: 'jdp.fnol.submitClaim',
+        defaultMessage: 'Submit claim',
+    },
+    discardDraft: {
+        id: 'jdp.fnol.discardDraft',
+        defaultMessage: 'Discard draft',
+    },
+    discardConfirmTitle: {
+        id: 'jdp.fnol.discardConfirm.title',
+        defaultMessage: 'Discard this draft?',
+    },
+    discardConfirmBody: {
+        id: 'jdp.fnol.discardConfirm.body',
+        defaultMessage:
+            'Any information you entered will be permanently removed.',
+    },
+    discardConfirmConfirm: {
+        id: 'jdp.fnol.discardConfirm.confirm',
+        defaultMessage: 'Discard',
+    },
+    discardConfirmCancel: {
+        id: 'jdp.fnol.discardConfirm.cancel',
+        defaultMessage: 'Keep draft',
+    },
+    reviewFieldCause: {
+        id: 'jdp.fnol.review.field.cause',
+        defaultMessage: 'Loss cause',
+    },
+    reviewFieldDescription: {
+        id: 'jdp.fnol.review.field.description',
+        defaultMessage: 'Description',
+    },
+    reviewFieldLocation: {
+        id: 'jdp.fnol.review.field.location',
+        defaultMessage: 'Location',
+    },
+    reviewFieldInjuries: {
+        id: 'jdp.fnol.review.field.injuries',
+        defaultMessage: 'Injuries',
+    },
+    reviewFieldInjuryDescription: {
+        id: 'jdp.fnol.review.field.injuryDescription',
+        defaultMessage: 'Injury description',
+    },
+    reviewFieldPoliceReport: {
+        id: 'jdp.fnol.review.field.policeReport',
+        defaultMessage: 'Police report',
+    },
+    reviewFieldWitnesses: {
+        id: 'jdp.fnol.review.field.witnesses',
+        defaultMessage: 'Witnesses',
+    },
+    reviewYes: {
+        id: 'jdp.fnol.review.yes',
+        defaultMessage: 'Yes',
+    },
+    reviewNo: {
+        id: 'jdp.fnol.review.no',
+        defaultMessage: 'No',
+    },
+    reviewNotProvided: {
+        id: 'jdp.fnol.review.notProvided',
+        defaultMessage: '—',
     },
     submitErrorTitle: {
         id: 'jdp.fnol.submit.error.title',

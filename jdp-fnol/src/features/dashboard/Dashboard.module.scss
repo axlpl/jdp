@@ -1,5 +1,8 @@
 .dashboard {
     padding: var(--GW-LAYOUT-8) 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--GW-LAYOUT-8);
     box-sizing: border-box;
 }
 
@@ -9,7 +12,6 @@
     align-items: center;
     gap: var(--GW-LAYOUT-4);
     flex-wrap: wrap;
-    margin-bottom: var(--GW-LAYOUT-6);
 }
 
 .titleBlock {
@@ -29,6 +31,62 @@
     color: var(--GW-TEXT-COLOR-2);
 }
 
+.draftBanner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--GW-LAYOUT-4);
+    padding: var(--GW-LAYOUT-4) var(--GW-LAYOUT-5);
+    background: var(--GW-COLOR-BACKGROUND-1);
+    border: 1px solid var(--GW-BORDER-COLOR);
+    border-left: 4px solid var(--GW-COLOR-WARNING-1, #f59e0b);
+    border-radius: var(--GW-BORDER-RADIUS);
+    flex-wrap: wrap;
+}
+
+.draftBannerText {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1 1 280px;
+    min-width: 0;
+}
+
+.draftBannerTitle {
+    margin: 0;
+    color: var(--GW-TEXT-COLOR-1);
+    font-weight: 600;
+}
+
+.draftBannerBody {
+    margin: 0;
+    color: var(--GW-TEXT-COLOR-2);
+}
+
+.draftBannerActions {
+    display: flex;
+    gap: var(--GW-LAYOUT-2);
+    flex-wrap: wrap;
+}
+
+.toolbar {
+    display: flex;
+    align-items: center;
+    gap: var(--GW-LAYOUT-4);
+    flex-wrap: wrap;
+}
+
+.searchWrapper {
+    flex: 1 1 320px;
+    min-width: 240px;
+}
+
+.resultsCount {
+    color: var(--GW-TEXT-COLOR-2);
+    font-size: var(--GW-FONT-SIZE-SUBTEXT);
+    white-space: nowrap;
+}
+
 .status {
     padding: var(--GW-LAYOUT-8);
     text-align: center;
@@ -36,30 +94,20 @@
 }
 
 .error {
-    color: var(--GW-COLOR-ERROR-2, #b42318);
+    color: var(--GW-COLOR-ERROR-2);
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: var(--GW-LAYOUT-4);
 }
 
-.tableWrap {
-    overflow-x: auto;
-}
-
 @media (max-width: 768px) {
     .dashboard {
-        padding: var(--GW-LAYOUT-6) var(--GW-LAYOUT-4);
+        padding: var(--GW-LAYOUT-6) 0;
     }
 
     .header {
         flex-direction: column;
         align-items: stretch;
-    }
-}
-
-@media (max-width: 480px) {
-    .dashboard {
-        padding: var(--GW-LAYOUT-4) var(--GW-LAYOUT-3);
     }
 }

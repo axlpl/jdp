@@ -18,6 +18,7 @@ import type {
 } from '../types/domain';
 import {
     buildClaimCreateAttributes,
+    isDraftSubmittable,
     toClaimReceipt,
     toLossCause,
 } from '../types/mappers';
@@ -82,22 +83,11 @@ export const submitFnol = async (
 ): Promise<ClaimReceipt> => {
     const { draft, policy } = payload;
 
-    if (
-        draft.policyNumber == null ||
-        draft.dateOfLoss == null ||
-        draft.lossCause == null
-    ) {
+    if (!isDraftSubmittable(draft)) {
         throw new Error('FNOL draft is incomplete');
     }
 
-    const requestAttributes = buildClaimCreateAttributes(
-        {
-            policyNumber: draft.policyNumber,
-            dateOfLoss: draft.dateOfLoss,
-            lossCause: draft.lossCause,
-        },
-        policy
-    );
+    const requestAttributes = buildClaimCreateAttributes(draft, policy);
 
     if (runtimeConfig.useMocks) {
         await delay(MOCK_LATENCY_LONG_MS);

@@ -15,6 +15,21 @@ export interface ClaimCreateAttributesDto {
     licensePlate: string;
     policyEffectiveDate: string;
     policyExpirationDate: string;
+    lossDescription?: string;
+    lossLocation?: string;
+    pointOfImpact?: string;
+    vehicleDriveable?: boolean;
+    reporterPhone?: string;
+    injuriesInvolved?: boolean;
+    injuryDescription?: string;
+    policeCalled?: boolean;
+    policeReportNumber?: string;
+    otherPartyName?: string;
+    otherPartyPhone?: string;
+    otherPartyInsurer?: string;
+    otherPartyPlate?: string;
+    witnessDetails?: string;
+    photoCount?: number;
 }
 
 export interface ClaimResourceAttributesDto {

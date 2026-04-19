@@ -6,7 +6,9 @@ import type { PolicyResourceDto } from './dto/policy';
 import type { TypecodeDto } from './dto/typelist';
 import type {
     ClaimReceipt,
+    FnolDraft,
     LossCause,
+    LossCauseCode,
     Policy,
     PolicyStatus,
 } from './domain';
@@ -40,7 +42,7 @@ export const toPolicy = (dto: PolicyResourceDto): Policy => {
 };
 
 export const toLossCause = (dto: TypecodeDto): LossCause => ({
-    code: dto.code,
+    code: dto.code as LossCauseCode,
     displayName: dto.name,
 });
 
@@ -55,16 +57,40 @@ export const toClaimReceipt = (
     status: dto.attributes.claimStatus?.name ?? 'Draft',
 });
 
+const combineDateTime = (
+    date: string,
+    time: string | null
+): string => {
+    if (!time) {
+        return date;
+    }
+    const datePart = date.length >= 10 ? date.slice(0, 10) : date;
+
+    return `${datePart}T${time}`;
+};
+
+const defined = <T>(value: T | null | undefined): T | undefined =>
+    value === null || value === undefined ? undefined : value;
+
+export type CompleteFnolDraft = FnolDraft & {
+    policyNumber: string;
+    dateOfLoss: string;
+    lossCause: LossCauseCode;
+};
+
+export const isDraftSubmittable = (
+    draft: FnolDraft
+): draft is CompleteFnolDraft =>
+    draft.policyNumber !== null &&
+    draft.dateOfLoss !== null &&
+    draft.lossCause !== null;
+
 export const buildClaimCreateAttributes = (
-    draft: {
-        policyNumber: string;
-        dateOfLoss: string;
-        lossCause: string;
-    },
+    draft: CompleteFnolDraft,
     policy: Policy
 ): ClaimCreateAttributesDto => ({
     policyNumber: draft.policyNumber,
-    lossDate: draft.dateOfLoss,
+    lossDate: combineDateTime(draft.dateOfLoss, draft.timeOfLoss),
     lossCause: draft.lossCause,
     productCode: policy.productCode,
     accountHolderName: policy.accountHolderName,
@@ -72,4 +98,19 @@ export const buildClaimCreateAttributes = (
     licensePlate: policy.licensePlate,
     policyEffectiveDate: policy.effectiveDate,
     policyExpirationDate: policy.expirationDate,
+    lossDescription: defined(draft.lossDescription),
+    lossLocation: defined(draft.lossLocation),
+    pointOfImpact: defined(draft.pointOfImpact),
+    vehicleDriveable: defined(draft.vehicleDriveable),
+    reporterPhone: defined(draft.reporterPhone),
+    injuriesInvolved: defined(draft.injuriesInvolved),
+    injuryDescription: defined(draft.injuryDescription),
+    policeCalled: defined(draft.policeCalled),
+    policeReportNumber: defined(draft.policeReportNumber),
+    otherPartyName: defined(draft.otherPartyName),
+    otherPartyPhone: defined(draft.otherPartyPhone),
+    otherPartyInsurer: defined(draft.otherPartyInsurer),
+    otherPartyPlate: defined(draft.otherPartyPlate),
+    witnessDetails: defined(draft.witnessDetails),
+    photoCount: draft.photoCount > 0 ? draft.photoCount : undefined,
 });

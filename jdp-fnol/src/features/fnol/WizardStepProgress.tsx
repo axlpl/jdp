@@ -10,6 +10,7 @@ export type WizardStep = {
     route: string;
     title: string;
     component: React.ComponentType;
+    icon?: string;
 };
 
 type Props = {

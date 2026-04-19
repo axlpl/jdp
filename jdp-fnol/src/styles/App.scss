@@ -14,7 +14,6 @@ body {
     }
 }
 
-// Hide the OOB divider above WizardActionBar and add breathing room before footer.
 [data-testid='wizard-action-bar-wrapper'] {
     margin-top: var(--GW-LAYOUT-4);
     margin-bottom: var(--GW-LAYOUT-8);

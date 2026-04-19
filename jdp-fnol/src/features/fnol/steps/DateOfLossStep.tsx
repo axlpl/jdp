@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 
-import { DateField } from '@jutro/legacy/components';
+import { DateField, InputField } from '@jutro/legacy/components';
 import { useTranslator } from '@jutro/locale';
 import { WizardPage } from '@jutro/wizard-next';
 
-import type { Policy } from '../../../types/domain';
+import type { FnolDraft, Policy } from '../../../types/domain';
 import { formatDate, startOfDay } from '../../../utils/date';
 import { usePolicies } from '../../policies/PoliciesContext';
 import { useFnol } from '../FnolContext';
+import { useFlow } from '../flow/FlowContext';
 import messages from '../Fnol.messages';
 
 import styles from '../Fnol.module.scss';
@@ -50,6 +51,7 @@ const validate = (
 export const DateOfLossStep = () => {
     const translator = useTranslator();
     const { draft, setDate } = useFnol();
+    const flow = useFlow<FnolDraft>();
     const { getByNumber } = usePolicies();
     const [error, setError] = useState<ValidationReason | null>(null);
 
@@ -110,6 +112,16 @@ export const DateOfLossStep = () => {
                     }}
                     required
                     showRequired
+                />
+
+                <InputField
+                    id="timeOfLoss"
+                    label={messages.stepTimeLabel}
+                    inputType="time"
+                    value={draft.timeOfLoss ?? ''}
+                    onValueChange={(value: string) =>
+                        flow.setValue('timeOfLoss', value ?? null)
+                    }
                 />
 
                 {renderError()}

@@ -1,0 +1,61 @@
+.policyCard {
+    display: flex;
+    flex-direction: column;
+    gap: var(--GW-LAYOUT-4);
+}
+
+.topRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--GW-LAYOUT-3);
+}
+
+.identity {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.policyNumber {
+    margin: 0;
+}
+
+.productName {
+    margin: 0;
+    color: var(--GW-TEXT-COLOR-2);
+}
+
+.vehicleDescription {
+    margin: 0;
+    color: var(--GW-TEXT-COLOR-1);
+}
+
+.metaGrid {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--GW-LAYOUT-2) var(--GW-LAYOUT-4);
+    padding-top: var(--GW-LAYOUT-4);
+    border-top: 1px solid var(--GW-BORDER-COLOR);
+}
+
+.metaLabel {
+    color: var(--GW-TEXT-COLOR-2);
+}
+
+.metaValue {
+    color: var(--GW-TEXT-COLOR-1);
+    text-align: right;
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: var(--GW-LAYOUT-2);
+}
+
+@media (max-width: 480px) {
+    .metaValue {
+        text-align: left;
+    }
+}

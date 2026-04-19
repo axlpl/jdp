@@ -30,9 +30,17 @@ export default defineMessages({
         id: 'jdp.app.avatar.settings',
         defaultMessage: 'Settings',
     },
+    avatarLogout: {
+        id: 'jdp.app.avatar.logout',
+        defaultMessage: 'Sign out',
+    },
     avatarDashboard: {
         id: 'jdp.app.avatar.dashboard',
         defaultMessage: 'Go to Dashboard',
+    },
+    loginTitle: {
+        id: 'jdp.app.route.login',
+        defaultMessage: 'Sign in',
     },
     helpGwCloud: {
         id: 'jdp.app.help.gwCloud',

@@ -4,8 +4,20 @@ import type {
     CompositeResponseBody,
     CompositeSubResponse,
 } from '../../types/dto/composite';
+import { encodeBasicAuth } from '../../utils/basicAuth';
 
 export type CompositeFlavor = 'pc' | 'cc';
+
+type CredentialsPair = { username: string; password: string };
+type CredentialsGetter = () => CredentialsPair | null;
+
+let credentialsGetter: CredentialsGetter = () => null;
+
+export const registerCredentialsProvider = (
+    getter: CredentialsGetter
+): void => {
+    credentialsGetter = getter;
+};
 
 const endpointFor = (flavor: CompositeFlavor): string => {
     const base =
@@ -17,6 +29,12 @@ const endpointFor = (flavor: CompositeFlavor): string => {
 };
 
 const buildAuthHeader = (): string | null => {
+    const dynamic = credentialsGetter();
+
+    if (dynamic) {
+        return `Basic ${encodeBasicAuth(dynamic.username, dynamic.password)}`;
+    }
+
     switch (runtimeConfig.authMode) {
         case 'bearer':
             return runtimeConfig.apiBearerToken
@@ -29,11 +47,9 @@ const buildAuthHeader = (): string | null => {
                 return null;
             }
 
-            return `Basic ${btoa(`${apiBasicUser}:${apiBasicPassword}`)}`;
+            return `Basic ${encodeBasicAuth(apiBasicUser, apiBasicPassword)}`;
         }
         case 'oauth':
-            // Handled upstream by @jutro/auth + authTokenHandler; no static header here.
-            return null;
         case 'none':
         default:
             return null;

@@ -1,0 +1,33 @@
+.loginPage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+    padding: var(--GW-LAYOUT-6);
+    box-sizing: border-box;
+}
+
+.loginCard {
+    width: 100%;
+    max-width: 420px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--GW-LAYOUT-5);
+}
+
+.subtitle {
+    margin: 0;
+    color: var(--GW-TEXT-COLOR-2);
+}
+
+.errorText {
+    color: var(--GW-COLOR-ERROR-2);
+    margin: 0;
+}
+
+.actions {
+    padding-top: var(--GW-LAYOUT-3);
+}

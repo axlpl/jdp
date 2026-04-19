@@ -9,12 +9,16 @@ import { Wizard } from '@jutro/wizard-next';
 import { submitFnol } from '../../services/claimCenterApi';
 import { usePolicies } from '../policies/PoliciesContext';
 
-import { FnolProvider, useFnol } from './FnolContext';
+import { useFnol } from './FnolContext';
 import messages from './Fnol.messages';
 import { DateOfLossStep } from './steps/DateOfLossStep';
 import { LossCauseStep } from './steps/LossCauseStep';
+import { LossDetailsStep } from './steps/LossDetailsStep';
+import { OtherDetailsStep } from './steps/OtherDetailsStep';
+import { ReviewStep } from './steps/ReviewStep';
 import { SelectPolicyStep } from './steps/SelectPolicyStep';
-import { WizardStep, WizardStepProgress } from './WizardStepProgress';
+import type { WizardStep } from './WizardStepProgress';
+import { WizardStepProgress } from './WizardStepProgress';
 
 const wizardLayout = {
     desktop: { gap: 'small' as const },
@@ -40,18 +44,42 @@ const FnolWizardInner = () => {
                 title: translator(messages.stepPolicyTitle),
                 route: 'policy',
                 component: SelectPolicyStep,
+                icon: 'gw-assignment',
             },
             {
                 id: 'date',
                 title: translator(messages.stepDateTitle),
                 route: 'date',
                 component: DateOfLossStep,
+                icon: 'gw-event',
             },
             {
                 id: 'cause',
                 title: translator(messages.stepCauseTitle),
                 route: 'cause',
                 component: LossCauseStep,
+                icon: 'gw-warning',
+            },
+            {
+                id: 'details',
+                title: translator(messages.stepDetailsTitle),
+                route: 'details',
+                component: LossDetailsStep,
+                icon: 'gw-description',
+            },
+            {
+                id: 'other',
+                title: translator(messages.stepOtherTitle),
+                route: 'other',
+                component: OtherDetailsStep,
+                icon: 'gw-info-outline',
+            },
+            {
+                id: 'review',
+                title: translator(messages.stepReviewTitle),
+                route: 'review',
+                component: ReviewStep,
+                icon: 'gw-done',
             },
         ],
         [translator]
@@ -86,11 +114,22 @@ const FnolWizardInner = () => {
     }, [draft, getByNumber, history, reset, showAlert]);
 
     const handleCancel = useCallback((): boolean => {
-        reset();
         history.push('/dashboard');
 
         return false;
-    }, [history, reset]);
+    }, [history]);
+
+    const wizardButtonProps = useMemo(
+        () => ({
+            cancel: {
+                children: messages.saveAndExit,
+            },
+            finish: {
+                children: messages.submitClaim,
+            },
+        }),
+        []
+    );
 
     const renderProgressBar = useCallback(
         ({
@@ -116,14 +155,13 @@ const FnolWizardInner = () => {
             initialStepPath="policy"
             onFinish={handleFinish}
             onCancel={handleCancel}
+            cancelPath="/dashboard"
+            finishPath="/dashboard"
+            buttonProps={wizardButtonProps}
             layout={wizardLayout}
             renderProgressBar={renderProgressBar}
         />
     );
 };
 
-export const FnolWizard = () => (
-    <FnolProvider>
-        <FnolWizardInner />
-    </FnolProvider>
-);
+export const FnolWizard = FnolWizardInner;
