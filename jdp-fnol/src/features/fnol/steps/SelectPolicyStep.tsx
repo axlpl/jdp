@@ -29,10 +29,18 @@ export const SelectPolicyStep = () => {
 
     const availableValues = useMemo(
         () =>
-            policies.map(p => ({
-                code: p.policyNumber,
-                name: `${p.policyNumber} — ${p.vehicleDescription}`,
-            })),
+            policies.map(p => {
+                const suffix = [p.productName, p.accountHolderName]
+                    .filter(Boolean)
+                    .join(' · ');
+
+                return {
+                    code: p.policyNumber,
+                    name: suffix
+                        ? `${p.policyNumber} — ${suffix}`
+                        : p.policyNumber,
+                };
+            }),
         [policies]
     );
 

@@ -7,6 +7,7 @@ export interface TypeKeyReferenceDto {
 
 export interface ClaimAddressDto {
     addressLine1?: string;
+    addressLine2?: string;
     city?: string;
     country?: string;
     postalCode?: string;

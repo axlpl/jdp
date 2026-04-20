@@ -9,8 +9,10 @@ import { useTranslator } from '@jutro/locale';
 import { WizardPage } from '@jutro/wizard-next';
 
 import type { FnolDraft } from '../../../types/domain';
+import { DriverPicker } from '../components/DriverPicker';
 import { useFnol } from '../FnolContext';
 import { useFlow } from '../flow/FlowContext';
+import { usePolicyResources } from '../PolicyResourcesContext';
 import messages from '../Fnol.messages';
 
 import styles from '../Fnol.module.scss';
@@ -19,6 +21,7 @@ export const OtherDetailsStep = () => {
     const translator = useTranslator();
     const { draft } = useFnol();
     const flow = useFlow<FnolDraft>();
+    const resources = usePolicyResources();
 
     const yesNoValues = useMemo(
         () => [
@@ -45,6 +48,11 @@ export const OtherDetailsStep = () => {
                 <p className={styles.prompt}>
                     {translator(messages.stepOtherHeading)}
                 </p>
+
+                <DriverPicker
+                    contacts={resources.contacts}
+                    draft={draft}
+                />
 
                 <RadioField
                     id="injuriesInvolved"

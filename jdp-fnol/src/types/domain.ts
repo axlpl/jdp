@@ -54,6 +54,58 @@ export type ImpactArea = {
     damageType: DamageType | null;
 };
 
+export type AddressInput = {
+    addressLine1: string;
+    addressLine2: string | null;
+    city: string;
+    state: string | null;
+    postalCode: string;
+    country: string | null;
+};
+
+export type PolicyLocation = {
+    id: string;
+    locationNumber: string;
+    displayName: string;
+    address: AddressInput;
+};
+
+export type PolicyVehicle = {
+    id: string;
+    displayName: string;
+    year: number | null;
+    make: string;
+    model: string;
+    vin: string;
+    licensePlate: string;
+};
+
+export type PolicyContact = {
+    id: string;
+    displayName: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    licenseNumber: string;
+};
+
+export type VehicleInput = {
+    year: string;
+    make: string;
+    model: string;
+    vin: string;
+    licensePlate: string;
+};
+
+export type DriverInput = {
+    firstName: string;
+    lastName: string;
+    phone: string;
+    email: string;
+    licenseNumber: string;
+};
+
 export type DraftSummary = {
     claimId: string;
     claimNumber: string | null;
@@ -83,6 +135,12 @@ export type FnolDraft = {
     otherPartyPlate: string | null;
     witnessDetails: string | null;
     photoCount: number;
+    lossLocationId: string | null;
+    newLossAddress: AddressInput | null;
+    vehicleId: string | null;
+    newVehicle: VehicleInput | null;
+    driverId: string | null;
+    newDriver: DriverInput | null;
 };
 
 export type FnolSubmissionPayload = {

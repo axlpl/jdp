@@ -15,8 +15,11 @@ import type {
     ImpactArea,
     VehicleArea,
 } from '../../../types/domain';
+import { LocationPicker } from '../components/LocationPicker';
 import { VehicleImpactPicker } from '../components/VehicleImpactPicker';
+import { VehiclePicker } from '../components/VehiclePicker';
 import { useFnol } from '../FnolContext';
+import { usePolicyResources } from '../PolicyResourcesContext';
 import { useFlow } from '../flow/FlowContext';
 import messages from '../Fnol.messages';
 
@@ -60,6 +63,7 @@ export const LossDetailsStep = () => {
     const translator = useTranslator();
     const { draft } = useFnol();
     const flow = useFlow<FnolDraft>();
+    const resources = usePolicyResources();
     const [showError, setShowError] = useState(false);
 
     const selectedAreaSet = useMemo(
@@ -112,12 +116,33 @@ export const LossDetailsStep = () => {
         [draft.impactAreas, flow]
     );
 
-    const handleNext = (): boolean => {
-        const ready =
-            draft.lossDescription?.trim() && draft.lossLocation?.trim();
+    const missingDescription = !draft.lossDescription?.trim();
+    const missingLocation =
+        draft.lossLocationId === null &&
+        !(
+            draft.newLossAddress?.addressLine1.trim() &&
+            draft.newLossAddress?.city.trim()
+        );
+    const missingVehicle =
+        draft.vehicleId === null &&
+        !(
+            draft.newVehicle?.make.trim() &&
+            draft.newVehicle?.model.trim()
+        );
 
-        if (!ready) {
+    const handleNext = (): boolean => {
+        if (missingDescription || missingLocation || missingVehicle) {
             setShowError(true);
+            requestAnimationFrame(() => {
+                const el = document.querySelector<HTMLElement>(
+                    '[data-invalid="true"]'
+                );
+
+                if (el) {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    el.focus?.();
+                }
+            });
 
             return false;
         }
@@ -155,19 +180,35 @@ export const LossDetailsStep = () => {
                     }}
                     required
                     showRequired
+                    validationMessages={
+                        showError && missingDescription
+                            ? [messages.descriptionRequired]
+                            : undefined
+                    }
+                    showErrors={showError && missingDescription}
+                    data-invalid={
+                        showError && missingDescription ? 'true' : undefined
+                    }
                 />
 
-                <InputField
-                    id="lossLocation"
-                    label={messages.stepDetailsLocationLabel}
-                    placeholder={messages.stepDetailsLocationPlaceholder}
-                    value={draft.lossLocation ?? ''}
-                    onValueChange={(value: string) => {
-                        flow.setValue('lossLocation', value);
-                        setShowError(false);
-                    }}
-                    required
-                    showRequired
+                <LocationPicker
+                    locations={resources.locations}
+                    draft={draft}
+                    errorMessage={
+                        showError && missingLocation
+                            ? messages.locationRequired
+                            : undefined
+                    }
+                />
+
+                <VehiclePicker
+                    vehicles={resources.vehicles}
+                    draft={draft}
+                    errorMessage={
+                        showError && missingVehicle
+                            ? messages.vehicleRequired
+                            : undefined
+                    }
                 />
 
                 <section className={styles.impactSection}>
@@ -233,11 +274,6 @@ export const LossDetailsStep = () => {
                     }
                 />
 
-                {showError && (
-                    <p className={styles.errorText}>
-                        {translator(messages.stepDetailsRequired)}
-                    </p>
-                )}
             </div>
         </WizardPage>
     );

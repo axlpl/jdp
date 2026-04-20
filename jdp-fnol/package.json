@@ -50,7 +50,7 @@
     "test": "jutro app:tests --no-verify",
     "test:ci": "cross-env CI=true npm test --collectCoverage",
     "typecheck": "tsc --noEmit",
-    "gen:sdk": "jutro generate:digital-sdk --configPath ./sdk-generator.config.json --outputPath ./src/generated",
+    "gen:sdk": "jutro generate:digital-sdk --configPath ./ --outputPath ./src/generated",
     "validate-file-structure": "jutro validate:folders",
     "lint:js": "cross-env eslint -c .eslintrc.js './**/*.{js,jsx,mjs,json,ts,tsx}'",
     "lint:css": "cross-env stylelint \"**/*.scss\"",

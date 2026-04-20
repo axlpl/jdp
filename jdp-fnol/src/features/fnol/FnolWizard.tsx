@@ -11,6 +11,10 @@ import { usePolicies } from '../policies/PoliciesContext';
 
 import { useDrafts } from './DraftsContext';
 import { useFnol } from './FnolContext';
+import {
+    PolicyResourcesProvider,
+    usePolicyResources,
+} from './PolicyResourcesContext';
 import messages from './Fnol.messages';
 import { DateOfLossStep } from './steps/DateOfLossStep';
 import { LossCauseStep } from './steps/LossCauseStep';
@@ -38,6 +42,7 @@ const FnolWizardInner = () => {
     const { draft, reset, loadDraft, hasDraft } = useFnol();
     const { getByNumber } = usePolicies();
     const { reload: reloadDrafts } = useDrafts();
+    const resources = usePolicyResources();
 
     const steps = useMemo<WizardStep[]>(
         () => [
@@ -97,7 +102,12 @@ const FnolWizardInner = () => {
                 throw new Error('Selected policy is no longer available');
             }
 
-            const result = await submitFnol({ draft, policy });
+            const result = await submitFnol({
+                draft,
+                locations: resources.locations,
+                vehicles: resources.vehicles,
+                contacts: resources.contacts,
+            });
 
             reset();
             void reloadDrafts();
@@ -114,7 +124,7 @@ const FnolWizardInner = () => {
         }
 
         return false;
-    }, [draft, getByNumber, history, reset, showAlert]);
+    }, [draft, getByNumber, history, reloadDrafts, reset, resources, showAlert]);
 
     const handleCancel = useCallback((): boolean => {
         if (!hasDraft) {
@@ -191,4 +201,8 @@ const FnolWizardInner = () => {
     );
 };
 
-export const FnolWizard = FnolWizardInner;
+export const FnolWizard = () => (
+    <PolicyResourcesProvider>
+        <FnolWizardInner />
+    </PolicyResourcesProvider>
+);

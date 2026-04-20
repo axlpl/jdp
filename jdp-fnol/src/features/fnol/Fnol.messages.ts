@@ -412,4 +412,209 @@ export default defineMessages({
         id: 'jdp.fnol.confirmation.backToDashboard',
         defaultMessage: 'Back to dashboard',
     },
+
+    locationSectionTitle: {
+        id: 'jdp.fnol.location.title',
+        defaultMessage: 'Loss location',
+    },
+    locationModePick: {
+        id: 'jdp.fnol.location.mode.pick',
+        defaultMessage: 'Pick a policy location',
+    },
+    locationModeNew: {
+        id: 'jdp.fnol.location.mode.new',
+        defaultMessage: 'Enter a new address',
+    },
+    locationPickLabel: {
+        id: 'jdp.fnol.location.pickLabel',
+        defaultMessage: 'Policy location',
+    },
+    addressLine1Label: {
+        id: 'jdp.fnol.address.line1',
+        defaultMessage: 'Street address',
+    },
+    addressLine2Label: {
+        id: 'jdp.fnol.address.line2',
+        defaultMessage: 'Apt / Suite (optional)',
+    },
+    addressCityLabel: {
+        id: 'jdp.fnol.address.city',
+        defaultMessage: 'City',
+    },
+    addressStateLabel: {
+        id: 'jdp.fnol.address.state',
+        defaultMessage: 'State / Region',
+    },
+    addressPostalLabel: {
+        id: 'jdp.fnol.address.postal',
+        defaultMessage: 'Postal code',
+    },
+    addressCountryLabel: {
+        id: 'jdp.fnol.address.country',
+        defaultMessage: 'Country',
+    },
+
+    vehicleSectionTitle: {
+        id: 'jdp.fnol.vehicle.title',
+        defaultMessage: 'Vehicle involved',
+    },
+    vehicleModePick: {
+        id: 'jdp.fnol.vehicle.mode.pick',
+        defaultMessage: 'Pick from policy',
+    },
+    vehicleModeNew: {
+        id: 'jdp.fnol.vehicle.mode.new',
+        defaultMessage: 'Add a new vehicle',
+    },
+    vehiclePickLabel: {
+        id: 'jdp.fnol.vehicle.pickLabel',
+        defaultMessage: 'Policy vehicle',
+    },
+    vehicleYearLabel: {
+        id: 'jdp.fnol.vehicle.year',
+        defaultMessage: 'Year',
+    },
+    vehicleMakeLabel: {
+        id: 'jdp.fnol.vehicle.make',
+        defaultMessage: 'Make',
+    },
+    vehicleModelLabel: {
+        id: 'jdp.fnol.vehicle.model',
+        defaultMessage: 'Model',
+    },
+    vehicleVinLabel: {
+        id: 'jdp.fnol.vehicle.vin',
+        defaultMessage: 'VIN',
+    },
+    vehiclePlateLabel: {
+        id: 'jdp.fnol.vehicle.plate',
+        defaultMessage: 'License plate',
+    },
+
+    driverSectionTitle: {
+        id: 'jdp.fnol.driver.title',
+        defaultMessage: 'Driver',
+    },
+    driverModePick: {
+        id: 'jdp.fnol.driver.mode.pick',
+        defaultMessage: 'Pick from policy contacts',
+    },
+    driverModeNew: {
+        id: 'jdp.fnol.driver.mode.new',
+        defaultMessage: 'Add a new driver',
+    },
+    driverPickLabel: {
+        id: 'jdp.fnol.driver.pickLabel',
+        defaultMessage: 'Driver',
+    },
+    driverFirstNameLabel: {
+        id: 'jdp.fnol.driver.firstName',
+        defaultMessage: 'First name',
+    },
+    driverLastNameLabel: {
+        id: 'jdp.fnol.driver.lastName',
+        defaultMessage: 'Last name',
+    },
+    driverPhoneLabel: {
+        id: 'jdp.fnol.driver.phone',
+        defaultMessage: 'Phone',
+    },
+    driverEmailLabel: {
+        id: 'jdp.fnol.driver.email',
+        defaultMessage: 'Email',
+    },
+    driverLicenseLabel: {
+        id: 'jdp.fnol.driver.license',
+        defaultMessage: 'Driver license number',
+    },
+
+    reviewFieldDriver: {
+        id: 'jdp.fnol.review.field.driver',
+        defaultMessage: 'Driver',
+    },
+
+    modalCancel: {
+        id: 'jdp.fnol.modal.cancel',
+        defaultMessage: 'Cancel',
+    },
+    modalSave: {
+        id: 'jdp.fnol.modal.save',
+        defaultMessage: 'Save',
+    },
+    modalNewAddressTitle: {
+        id: 'jdp.fnol.modal.newAddress.title',
+        defaultMessage: 'Add a new address',
+    },
+    modalNewVehicleTitle: {
+        id: 'jdp.fnol.modal.newVehicle.title',
+        defaultMessage: 'Add a new vehicle',
+    },
+    modalNewDriverTitle: {
+        id: 'jdp.fnol.modal.newDriver.title',
+        defaultMessage: 'Add a new driver',
+    },
+
+    locationAddButton: {
+        id: 'jdp.fnol.location.addButton',
+        defaultMessage: 'Add new address',
+    },
+    locationEditButton: {
+        id: 'jdp.fnol.location.editButton',
+        defaultMessage: 'Edit added address',
+    },
+    locationCustomOption: {
+        id: 'jdp.fnol.location.customOption',
+        defaultMessage: 'New address — {value}',
+    },
+
+    vehicleAddButton: {
+        id: 'jdp.fnol.vehicle.addButton',
+        defaultMessage: 'Add new vehicle',
+    },
+    vehicleEditButton: {
+        id: 'jdp.fnol.vehicle.editButton',
+        defaultMessage: 'Edit added vehicle',
+    },
+    vehicleCustomOption: {
+        id: 'jdp.fnol.vehicle.customOption',
+        defaultMessage: 'New vehicle — {value}',
+    },
+    vehicleYearInvalid: {
+        id: 'jdp.fnol.vehicle.yearInvalid',
+        defaultMessage: 'Enter a valid 4-digit year.',
+    },
+
+    driverAddButton: {
+        id: 'jdp.fnol.driver.addButton',
+        defaultMessage: 'Add new driver',
+    },
+    driverEditButton: {
+        id: 'jdp.fnol.driver.editButton',
+        defaultMessage: 'Edit added driver',
+    },
+    driverCustomOption: {
+        id: 'jdp.fnol.driver.customOption',
+        defaultMessage: 'New driver — {value}',
+    },
+    driverEmailInvalid: {
+        id: 'jdp.fnol.driver.emailInvalid',
+        defaultMessage: 'Enter a valid email address.',
+    },
+
+    fieldRequired: {
+        id: 'jdp.fnol.field.required',
+        defaultMessage: 'This field is required.',
+    },
+    locationRequired: {
+        id: 'jdp.fnol.location.required',
+        defaultMessage: 'Pick a location or add a new address.',
+    },
+    vehicleRequired: {
+        id: 'jdp.fnol.vehicle.required',
+        defaultMessage: 'Pick a vehicle or add a new one.',
+    },
+    descriptionRequired: {
+        id: 'jdp.fnol.description.required',
+        defaultMessage: 'Describe what happened.',
+    },
 });

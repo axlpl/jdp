@@ -12,22 +12,29 @@ import type {
     JsonApiSingleResponse,
 } from '../types/dto/jsonapi';
 import type { TypeListResourceDto } from '../types/dto/typelist';
+import type { CompositeSubRequest } from '../types/dto/composite';
 import type {
     ClaimReceipt,
     DraftSummary,
     FnolDraft,
-    FnolSubmissionPayload,
     LossCause,
 } from '../types/domain';
 import {
     buildClaimCreateAttributes,
     buildClaimDraftAttributes,
+    buildDriverContactAttributes,
+    buildVehicleIncidentAttributes,
     isDraftSubmittable,
     toClaimReceipt,
     toDraftSummary,
     toFnolDraft,
     toLossCause,
 } from '../types/mappers';
+import type {
+    PolicyContact,
+    PolicyLocation,
+    PolicyVehicle,
+} from '../types/domain';
 
 import {
     executeCommonCall,
@@ -226,9 +233,17 @@ export const discardDraft = async (claimId: string): Promise<void> => {
     );
 };
 
+export type FnolSubmissionContext = {
+    draft: FnolDraft;
+    locations?: PolicyLocation[];
+    vehicles?: PolicyVehicle[];
+    contacts?: PolicyContact[];
+};
+
 const submitExisting = async (
     claimId: string,
-    requestAttributes: ClaimCreateAttributesDto
+    requestAttributes: ClaimCreateAttributesDto,
+    context: FnolSubmissionContext
 ): Promise<ClaimReceipt> => {
     if (runtimeConfig.useMocks) {
         await delay(MOCK_LATENCY_LONG_MS);
@@ -256,6 +271,34 @@ const submitExisting = async (
         { data: { attributes: requestAttributes } } satisfies ClaimUpdateRequestDto
     );
 
+    const vehicleIncident = buildVehicleIncidentAttributes(
+        context.draft,
+        context.vehicles
+    );
+
+    if (vehicleIncident) {
+        await executeRestCall<unknown>(
+            'cc',
+            'POST',
+            `/claims/${encodeURIComponent(claimId)}/vehicle-incidents`,
+            { data: { attributes: vehicleIncident } }
+        );
+    }
+
+    const driverContact = buildDriverContactAttributes(
+        context.draft,
+        context.contacts
+    );
+
+    if (driverContact) {
+        await executeRestCall<unknown>(
+            'cc',
+            'POST',
+            `/claims/${encodeURIComponent(claimId)}/contacts`,
+            { data: { attributes: driverContact } }
+        );
+    }
+
     const response = await executeRestCall<
         JsonApiSingleResponse<ClaimResourceDto>
     >(
@@ -269,7 +312,8 @@ const submitExisting = async (
 };
 
 const createAndSubmit = async (
-    requestAttributes: ClaimCreateAttributesDto
+    requestAttributes: ClaimCreateAttributesDto,
+    context: FnolSubmissionContext
 ): Promise<ClaimReceipt> => {
     if (runtimeConfig.useMocks) {
         await delay(MOCK_LATENCY_LONG_MS);
@@ -280,44 +324,70 @@ const createAndSubmit = async (
         return toClaimReceipt(claim, requestAttributes);
     }
 
+    const vehicleIncident = buildVehicleIncidentAttributes(
+        context.draft,
+        context.vehicles
+    );
+    const driverContact = buildDriverContactAttributes(
+        context.draft,
+        context.contacts
+    );
+
+    const subRequests: CompositeSubRequest[] = [
+        {
+            method: 'POST',
+            uri: '/claim/v1/claims',
+            body: { data: { attributes: requestAttributes } },
+            vars: [{ name: 'claimId', path: '$.data.attributes.id' }],
+        },
+    ];
+
+    if (vehicleIncident) {
+        subRequests.push({
+            method: 'POST',
+            uri: '/claim/v1/claims/${claimId}/vehicle-incidents',
+            body: { data: { attributes: vehicleIncident } },
+        });
+    }
+
+    if (driverContact) {
+        subRequests.push({
+            method: 'POST',
+            uri: '/claim/v1/claims/${claimId}/contacts',
+            body: { data: { attributes: driverContact } },
+        });
+    }
+
+    subRequests.push({
+        method: 'POST',
+        uri: '/claim/v1/claims/${claimId}/submit',
+        body: EMPTY_SUBMIT_BODY,
+    });
+
     const { responses } = await executeComposite('cc', {
         requestTag: `jdp-fnol:createAndSubmit:${requestAttributes.policyNumber}`,
-        requests: [
-            {
-                method: 'POST',
-                uri: '/claim/v1/claims',
-                body: {
-                    data: { attributes: requestAttributes },
-                } satisfies ClaimCreateRequestDto,
-                vars: [{ name: 'claimId', path: '$.data.attributes.id' }],
-            },
-            {
-                method: 'POST',
-                uri: '/claim/v1/claims/${claimId}/submit',
-                body: EMPTY_SUBMIT_BODY,
-            },
-        ],
+        requests: subRequests,
     });
 
     const submitted = unwrapSubResponse<
         JsonApiSingleResponse<ClaimResourceDto>
-    >(responses[1], 'createAndSubmit:submit');
+    >(responses[responses.length - 1], 'createAndSubmit:submit');
 
     return toClaimReceipt(submitted.data, requestAttributes);
 };
 
 export const submitFnol = async (
-    payload: FnolSubmissionPayload
+    context: FnolSubmissionContext
 ): Promise<ClaimReceipt> => {
-    const { draft } = payload;
+    const { draft, locations = [] } = context;
 
     if (!isDraftSubmittable(draft)) {
         throw new Error('FNOL draft is incomplete');
     }
 
-    const requestAttributes = buildClaimCreateAttributes(draft);
+    const requestAttributes = buildClaimCreateAttributes(draft, locations);
 
     return draft.claimId
-        ? submitExisting(draft.claimId, requestAttributes)
-        : createAndSubmit(requestAttributes);
+        ? submitExisting(draft.claimId, requestAttributes, context)
+        : createAndSubmit(requestAttributes, context);
 };

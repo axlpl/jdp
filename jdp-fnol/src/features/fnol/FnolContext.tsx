@@ -28,6 +28,12 @@ const EMPTY_DRAFT: FnolDraft = {
     otherPartyPlate: null,
     witnessDetails: null,
     photoCount: 0,
+    lossLocationId: null,
+    newLossAddress: null,
+    vehicleId: null,
+    newVehicle: null,
+    driverId: null,
+    newDriver: null,
 };
 
 export type FnolContextValue = {

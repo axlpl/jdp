@@ -12,10 +12,10 @@ import type {
     VehicleArea,
 } from '../../../types/domain';
 import { formatDate } from '../../../utils/date';
-import { usePolicies } from '../../policies/PoliciesContext';
 import { useFnol } from '../FnolContext';
 import messages from '../Fnol.messages';
 import { LOSS_CAUSES } from '../lossCauses';
+import { usePolicyResources } from '../PolicyResourcesContext';
 
 import styles from '../Fnol.module.scss';
 
@@ -66,6 +66,25 @@ const DAMAGE_LABEL: Record<DamageType, string> = {
     other: 'Other',
 };
 
+type Pickable = { id: string; displayName: string };
+
+const pickedOrNewLabel = <Item extends Pickable, Value>(
+    pickedId: string | null,
+    items: Item[],
+    newValue: Value | null,
+    formatNew: (v: Value) => string
+): string => {
+    if (pickedId) {
+        const found = items.find(x => x.id === pickedId);
+
+        if (found) {
+            return found.displayName;
+        }
+    }
+
+    return newValue ? formatNew(newValue) : '';
+};
+
 const formatImpactAreas = (areas: ImpactArea[], dash: string): string => {
     if (areas.length === 0) {
         return dash;
@@ -83,12 +102,41 @@ const formatImpactAreas = (areas: ImpactArea[], dash: string): string => {
 export const ReviewStep = () => {
     const translator = useTranslator();
     const { draft } = useFnol();
-    const { getByNumber } = usePolicies();
-
-    const policy =
-        draft.policyNumber != null ? getByNumber(draft.policyNumber) : undefined;
+    const { locations, vehicles, contacts } = usePolicyResources();
 
     const dash = translator(messages.reviewNotProvided);
+
+    const locationLabel = pickedOrNewLabel(
+        draft.lossLocationId,
+        locations,
+        draft.newLossAddress,
+        a =>
+            [a.addressLine1, a.city, a.state, a.postalCode]
+                .filter(Boolean)
+                .join(', ')
+    );
+
+    const vehicleLabel = pickedOrNewLabel(
+        draft.vehicleId,
+        vehicles,
+        draft.newVehicle,
+        v => {
+            const parts = [v.year, v.make, v.model]
+                .filter(Boolean)
+                .join(' ');
+            const plate = v.licensePlate ? ` · ${v.licensePlate}` : '';
+
+            return parts ? `${parts}${plate}` : '';
+        }
+    );
+
+    const driverLabel = pickedOrNewLabel(
+        draft.driverId,
+        contacts,
+        draft.newDriver,
+        d => [d.firstName, d.lastName].filter(Boolean).join(' ')
+    );
+
     const renderValue = (value: string | null | undefined): ReactNode =>
         value && value.trim() !== '' ? value : dash;
     const renderBool = (value: boolean | null): ReactNode => {
@@ -111,13 +159,6 @@ export const ReviewStep = () => {
                         key: 'policyNumber',
                         label: translator(messages.reviewFieldPolicyNumber),
                         value: renderValue(draft.policyNumber),
-                    },
-                    {
-                        key: 'vehicle',
-                        label: translator(messages.reviewFieldVehicle),
-                        value: policy
-                            ? `${policy.vehicleDescription} · ${policy.licensePlate}`
-                            : dash,
                     },
                 ],
             },
@@ -149,7 +190,12 @@ export const ReviewStep = () => {
                     {
                         key: 'location',
                         label: translator(messages.reviewFieldLocation),
-                        value: renderValue(draft.lossLocation),
+                        value: renderValue(locationLabel),
+                    },
+                    {
+                        key: 'vehicle',
+                        label: translator(messages.reviewFieldVehicle),
+                        value: renderValue(vehicleLabel),
                     },
                     {
                         key: 'impact',
@@ -173,6 +219,11 @@ export const ReviewStep = () => {
                 title: translator(messages.reviewSectionOther),
                 icon: 'gw-info-outline',
                 fields: [
+                    {
+                        key: 'driver',
+                        label: translator(messages.reviewFieldDriver),
+                        value: renderValue(driverLabel),
+                    },
                     {
                         key: 'injuries',
                         label: translator(messages.reviewFieldInjuries),
