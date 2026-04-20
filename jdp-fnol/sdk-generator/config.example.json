@@ -3,14 +3,14 @@
         {
             "name": "PcSdk",
             "target": "PC",
-            "targetUrl": "",
+            "targetUrl": "https://pc-datetest-gwcpdev.icpei.alpha3-butterfly.guidewire.net",
             "disableSchemaGeneration": false,
             "skipCompositeGeneration": false
         },
         {
             "name": "CcSdk",
             "target": "CC",
-            "targetUrl": "",
+            "targetUrl": "https://cc-datetest-gwcpdev.icpei.alpha3-butterfly.guidewire.net",
             "disableSchemaGeneration": false,
             "skipCompositeGeneration": false
         }

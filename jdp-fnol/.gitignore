@@ -40,3 +40,7 @@ yarn-error.log*
 .idea
 
 .jutro
+
+# SDK generator config (generated from .env.local via scripts/prepare-sdk-config.mjs)
+/sdk-generator/config.json
+
