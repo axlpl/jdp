@@ -4,6 +4,7 @@ import { AppFloorPlan } from '@jutro/floorplan';
 
 import { AuthProvider, useAuth } from '../features/auth/AuthContext';
 import { LoginPage } from '../features/auth/LoginPage';
+import { DraftsProvider } from '../features/fnol/DraftsContext';
 import { FnolProvider } from '../features/fnol/FnolContext';
 import { PoliciesProvider } from '../features/policies/PoliciesContext';
 import { runtimeConfig } from '../config/runtime';
@@ -20,9 +21,11 @@ const AuthSwitch = () => {
 
     return (
         <PoliciesProvider>
-            <FnolProvider>
-                <AppFloorPlan floorPlans={floorPlans} />
-            </FnolProvider>
+            <DraftsProvider>
+                <FnolProvider>
+                    <AppFloorPlan floorPlans={floorPlans} />
+                </FnolProvider>
+            </DraftsProvider>
         </PoliciesProvider>
     );
 };

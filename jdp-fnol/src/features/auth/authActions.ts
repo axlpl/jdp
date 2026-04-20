@@ -1,6 +1,4 @@
-let logoutHandler: () => void = () => {
-    /* noop until AuthProvider registers */
-};
+let logoutHandler: () => void = () => {};
 
 export const registerLogoutHandler = (fn: () => void): void => {
     logoutHandler = fn;

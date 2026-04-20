@@ -1,10 +1,15 @@
-export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+
+export interface CompositeVar {
+    name: string;
+    path?: string;
+}
 
 export interface CompositeSubRequest {
     method: HttpMethod;
     uri: string;
     body?: unknown;
-    vars?: Array<{ name: string; path?: string }>;
+    vars?: CompositeVar[];
     includeResponse?: boolean;
     parameters?: Record<string, unknown>;
 }

@@ -4,7 +4,7 @@ import { Button, Card } from '@jutro/components';
 import { InputField } from '@jutro/legacy/components';
 import { useTranslator } from '@jutro/locale';
 
-import { CompositeRequestError } from '../../services/http/compositeClient';
+import { ApiRequestError } from '../../services/http/httpClient';
 import { verifyCredentials } from '../../services/policyCenterApi';
 
 import messages from './Auth.messages';
@@ -41,7 +41,7 @@ export const LoginPage = () => {
             login({ username: trimmed, password });
         } catch (err) {
             if (
-                err instanceof CompositeRequestError &&
+                err instanceof ApiRequestError &&
                 (err.status === 401 || err.status === 403)
             ) {
                 setError('invalid');

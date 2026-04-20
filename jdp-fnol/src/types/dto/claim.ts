@@ -1,42 +1,35 @@
 import type { JsonApiResource } from './jsonapi';
 
-export interface ClaimStatusDto {
+export interface TypeKeyReferenceDto {
     code: string;
-    name: string;
+    name?: string;
+}
+
+export interface ClaimAddressDto {
+    addressLine1?: string;
+    city?: string;
+    country?: string;
+    postalCode?: string;
+    displayName?: string;
 }
 
 export interface ClaimCreateAttributesDto {
     policyNumber: string;
     lossDate: string;
-    lossCause: string;
-    productCode: string;
-    accountHolderName: string;
-    vehicleDescription: string;
-    licensePlate: string;
-    policyEffectiveDate: string;
-    policyExpirationDate: string;
-    lossDescription?: string;
-    lossLocation?: string;
-    impactAreas?: Array<{ area: string; damageType: string | null }>;
-    vehicleDriveable?: boolean;
-    reporterPhone?: string;
-    injuriesInvolved?: boolean;
-    injuryDescription?: string;
-    policeCalled?: boolean;
-    policeReportNumber?: string;
-    otherPartyName?: string;
-    otherPartyPhone?: string;
-    otherPartyInsurer?: string;
-    otherPartyPlate?: string;
-    witnessDetails?: string;
-    photoCount?: number;
+    lossCause: TypeKeyReferenceDto;
+    description?: string;
+    lossLocation?: ClaimAddressDto;
 }
 
 export interface ClaimResourceAttributesDto {
     claimNumber: string;
+    policyNumber?: string;
     lossDate: string;
-    lossCause: string;
-    claimStatus?: ClaimStatusDto;
+    lossCause?: TypeKeyReferenceDto;
+    claimStatus?: TypeKeyReferenceDto;
+    description?: string;
+    lossLocation?: ClaimAddressDto;
+    updateTime?: string;
 }
 
 export type ClaimResourceDto = JsonApiResource<
@@ -46,4 +39,12 @@ export type ClaimResourceDto = JsonApiResource<
 
 export interface ClaimCreateRequestDto {
     data: { attributes: ClaimCreateAttributesDto };
+}
+
+export interface ClaimUpdateRequestDto {
+    data: { attributes: Partial<ClaimCreateAttributesDto> };
+}
+
+export interface ClaimSubmitRequestDto {
+    data: { attributes: Record<string, never> };
 }

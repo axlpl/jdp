@@ -16,6 +16,7 @@ build/
 # local template/extract archives
 tmp-mfe/
 tmp-template/
+tmp/
 
 # Jutro / i18n generated
 .jutro/

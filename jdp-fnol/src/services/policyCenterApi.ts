@@ -1,5 +1,4 @@
 import { runtimeConfig } from '../config/runtime';
-import type { CompositeRequestBody } from '../types/dto/composite';
 import type {
     JsonApiListResponse,
     JsonApiSingleResponse,
@@ -8,7 +7,10 @@ import type { PolicyResourceDto } from '../types/dto/policy';
 import type { Policy } from '../types/domain';
 import { toPolicy } from '../types/mappers';
 
-import { executeComposite, unwrapSubResponse } from './http/compositeClient';
+import {
+    ApiRequestError,
+    executeRestCall,
+} from './http/httpClient';
 import { MOCK_LATENCY_NORMAL_MS, delay } from './mocks/common';
 import { MOCK_POLICY_DTOS } from './mocks/policies';
 
@@ -19,17 +21,11 @@ export const getPolicies = async (): Promise<Policy[]> => {
         return MOCK_POLICY_DTOS.map(toPolicy);
     }
 
-    const compositeRequest: CompositeRequestBody = {
-        requestTag: 'jdp-fnol:getPolicies',
-        requests: [{ method: 'GET', uri: '/policy/v1/policies' }],
-    };
-
-    const { responses } = await executeComposite('pc', compositeRequest);
-    const listBody = unwrapSubResponse<
+    const body = await executeRestCall<
         JsonApiListResponse<PolicyResourceDto>
-    >(responses[0], 'getPolicies');
+    >('pc', 'GET', '/policies');
 
-    return listBody.data.map(toPolicy);
+    return body.data.map(toPolicy);
 };
 
 export const verifyCredentials = async (): Promise<void> => {
@@ -37,17 +33,11 @@ export const verifyCredentials = async (): Promise<void> => {
         return;
     }
 
-    const compositeRequest: CompositeRequestBody = {
-        requestTag: 'jdp-fnol:verifyCredentials',
-        requests: [
-            {
-                method: 'GET',
-                uri: '/policy/v1/policies?pageSize=1',
-            },
-        ],
-    };
-
-    await executeComposite('pc', compositeRequest);
+    await executeRestCall<JsonApiListResponse<PolicyResourceDto>>(
+        'pc',
+        'GET',
+        '/policies?pageSize=1'
+    );
 };
 
 export const getPolicy = async (policyNumber: string): Promise<Policy> => {
@@ -58,31 +48,19 @@ export const getPolicy = async (policyNumber: string): Promise<Policy> => {
         );
 
         if (!dto) {
-            const err = new Error(
-                `Policy ${policyNumber} not found`
-            ) as Error & { status?: number };
-
-            err.status = 404;
-            throw err;
+            throw new ApiRequestError(
+                `Policy ${policyNumber} not found`,
+                404,
+                null
+            );
         }
 
         return toPolicy(dto);
     }
 
-    const compositeRequest: CompositeRequestBody = {
-        requestTag: `jdp-fnol:getPolicy:${policyNumber}`,
-        requests: [
-            {
-                method: 'GET',
-                uri: `/policy/v1/policies/${encodeURIComponent(policyNumber)}`,
-            },
-        ],
-    };
-
-    const { responses } = await executeComposite('pc', compositeRequest);
-    const single = unwrapSubResponse<
+    const body = await executeRestCall<
         JsonApiSingleResponse<PolicyResourceDto>
-    >(responses[0], `getPolicy(${policyNumber})`);
+    >('pc', 'GET', `/policies/${encodeURIComponent(policyNumber)}`);
 
-    return toPolicy(single.data);
+    return toPolicy(body.data);
 };

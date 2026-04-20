@@ -5,9 +5,12 @@ import { Button, useModal } from '@jutro/components';
 import { InputField } from '@jutro/legacy/components';
 import { Grid, GridItem } from '@jutro/layout';
 import { useTranslator } from '@jutro/locale';
+import { log } from '@jutro/logger';
 
 import { PageLayout } from '../../components/PageLayout';
-import type { Policy } from '../../types/domain';
+import { getDraft } from '../../services/claimCenterApi';
+import type { DraftSummary, Policy } from '../../types/domain';
+import { useDrafts } from '../fnol/DraftsContext';
 import { useFnol } from '../fnol/FnolContext';
 import { usePolicies } from '../policies/PoliciesContext';
 
@@ -35,36 +38,140 @@ const matchesQuery = (policy: Policy, query: string): boolean => {
     return haystack.includes(q);
 };
 
+const formatDate = (iso: string): string => {
+    const d = new Date(iso);
+
+    return Number.isNaN(d.getTime()) ? iso : d.toLocaleDateString();
+};
+
 export const Dashboard = () => {
     const translator = useTranslator();
     const history = useHistory();
     const { showConfirm } = useModal();
     const { policies, status, reload } = usePolicies();
-    const { hasDraft, reset: resetDraft } = useFnol();
+    const { drafts, status: draftsStatus, discard } = useDrafts();
+    const { loadDraft, reset: resetDraft } = useFnol();
     const [query, setQuery] = useState('');
 
     const goToNewFnol = useCallback(() => {
+        resetDraft();
         history.push('/fnol/new');
-    }, [history]);
+    }, [history, resetDraft]);
 
-    const handleDiscardDraft = useCallback(async () => {
-        const result = await showConfirm({
-            status: 'warning',
-            title: messages.draftDiscardTitle,
-            message: messages.draftDiscardBody,
-            confirmButtonText: messages.draftDiscardConfirm,
-            cancelButtonText: messages.draftDiscardCancel,
-        });
+    const resumeDraft = useCallback(
+        async (summary: DraftSummary) => {
+            try {
+                const loaded = await getDraft(summary.claimId);
 
-        if (result === 'CONFIRM') {
-            resetDraft();
-        }
-    }, [showConfirm, resetDraft]);
+                loadDraft(loaded);
+                history.push('/fnol/new');
+            } catch (err) {
+                log.error(
+                    `Resume draft failed: ${err instanceof Error ? err.message : String(err)}`
+                );
+            }
+        },
+        [history, loadDraft]
+    );
+
+    const handleDiscardDraft = useCallback(
+        async (summary: DraftSummary) => {
+            const result = await showConfirm({
+                status: 'warning',
+                title: messages.draftDiscardTitle,
+                message: messages.draftDiscardBody,
+                confirmButtonText: messages.draftDiscardConfirm,
+                cancelButtonText: messages.draftDiscardCancel,
+            });
+
+            if (result === 'CONFIRM') {
+                await discard(summary.claimId);
+            }
+        },
+        [discard, showConfirm]
+    );
 
     const filteredPolicies = useMemo(
         () => policies.filter(p => matchesQuery(p, query.trim())),
         [policies, query]
     );
+
+    const renderDrafts = () => {
+        if (draftsStatus === 'idle' || draftsStatus === 'loading') {
+            return (
+                <div className={styles.status}>
+                    {translator(messages.draftsLoading)}
+                </div>
+            );
+        }
+
+        if (draftsStatus === 'error') {
+            return (
+                <div className={`${styles.status} ${styles.error}`}>
+                    {translator(messages.draftsLoadError)}
+                </div>
+            );
+        }
+
+        if (drafts.length === 0) {
+            return null;
+        }
+
+        return (
+            <Grid
+                gap="medium"
+                columns={['1fr', '1fr']}
+                phoneWide={{ columns: ['1fr'] }}
+                phone={{ columns: ['1fr'] }}
+            >
+                {drafts.map(draft => (
+                    <GridItem key={draft.claimId}>
+                        <div className={styles.draftCard}>
+                            <h3>
+                                {translator(messages.draftCardTitle, {
+                                    claimNumber: draft.claimNumber ?? draft.claimId,
+                                })}
+                            </h3>
+                            <p>
+                                {translator(messages.draftCardPolicy, {
+                                    policyNumber: draft.policyNumber,
+                                })}
+                            </p>
+                            <p>
+                                {translator(messages.draftCardLoss, {
+                                    lossDate: formatDate(draft.lossDate),
+                                })}
+                            </p>
+                            <p>
+                                {translator(messages.draftCardUpdated, {
+                                    updatedAt: formatDate(draft.updatedAt),
+                                })}
+                            </p>
+                            <div className={styles.draftCardActions}>
+                                <Button
+                                    id={`resumeDraft-${draft.claimId}`}
+                                    onClick={() => void resumeDraft(draft)}
+                                    label={translator(
+                                        messages.draftBannerContinue
+                                    )}
+                                />
+                                <Button
+                                    id={`discardDraft-${draft.claimId}`}
+                                    variant="tertiary"
+                                    onClick={() =>
+                                        void handleDiscardDraft(draft)
+                                    }
+                                    label={translator(
+                                        messages.draftBannerDiscard
+                                    )}
+                                />
+                            </div>
+                        </div>
+                    </GridItem>
+                ))}
+            </Grid>
+        );
+    };
 
     const renderBody = () => {
         if (status === 'loading' || status === 'idle') {
@@ -142,32 +249,13 @@ export const Dashboard = () => {
                     />
                 </header>
 
-                {hasDraft && (
-                    <div className={styles.draftBanner}>
-                        <div className={styles.draftBannerText}>
-                            <h3 className={styles.draftBannerTitle}>
-                                {translator(messages.draftBannerTitle)}
-                            </h3>
-                            <p className={styles.draftBannerBody}>
-                                {translator(messages.draftBannerBody)}
-                            </p>
-                        </div>
-                        <div className={styles.draftBannerActions}>
-                            <Button
-                                id="continueDraft"
-                                onClick={goToNewFnol}
-                                label={translator(
-                                    messages.draftBannerContinue
-                                )}
-                            />
-                            <Button
-                                id="discardDraft"
-                                variant="tertiary"
-                                onClick={handleDiscardDraft}
-                                label={translator(messages.draftBannerDiscard)}
-                            />
-                        </div>
-                    </div>
+                {drafts.length > 0 && (
+                    <section className={styles.draftsSection}>
+                        <h2 className={styles.sectionTitle}>
+                            {translator(messages.draftsSectionTitle)}
+                        </h2>
+                        {renderDrafts()}
+                    </section>
                 )}
 
                 {status === 'success' && policies.length > 0 && (

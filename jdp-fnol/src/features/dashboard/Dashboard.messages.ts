@@ -70,13 +70,33 @@ export default defineMessages({
         defaultMessage:
             '{count, plural, one {# policy} other {# policies}}',
     },
-    draftBannerTitle: {
-        id: 'jdp.dashboard.draftBanner.title',
-        defaultMessage: 'You have a draft in progress',
+    draftsSectionTitle: {
+        id: 'jdp.dashboard.drafts.title',
+        defaultMessage: 'Draft claims',
     },
-    draftBannerBody: {
-        id: 'jdp.dashboard.draftBanner.body',
-        defaultMessage: 'Continue where you left off or discard the draft.',
+    draftsLoading: {
+        id: 'jdp.dashboard.drafts.loading',
+        defaultMessage: 'Loading drafts…',
+    },
+    draftsLoadError: {
+        id: 'jdp.dashboard.drafts.loadError',
+        defaultMessage: 'Could not load drafts.',
+    },
+    draftCardTitle: {
+        id: 'jdp.dashboard.draftCard.title',
+        defaultMessage: 'Claim {claimNumber}',
+    },
+    draftCardPolicy: {
+        id: 'jdp.dashboard.draftCard.policy',
+        defaultMessage: 'Policy {policyNumber}',
+    },
+    draftCardLoss: {
+        id: 'jdp.dashboard.draftCard.loss',
+        defaultMessage: 'Loss date {lossDate}',
+    },
+    draftCardUpdated: {
+        id: 'jdp.dashboard.draftCard.updated',
+        defaultMessage: 'Last saved {updatedAt}',
     },
     draftBannerContinue: {
         id: 'jdp.dashboard.draftBanner.continue',

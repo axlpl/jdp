@@ -12,7 +12,7 @@ import React, {
 import {
     registerCredentialsProvider,
     registerUnauthorizedHandler,
-} from '../../services/http/compositeClient';
+} from '../../services/http/httpClient';
 
 import { registerLogoutHandler } from './authActions';
 

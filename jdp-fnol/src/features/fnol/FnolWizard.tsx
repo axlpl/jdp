@@ -6,9 +6,10 @@ import { useTranslator } from '@jutro/locale';
 import { log } from '@jutro/logger';
 import { Wizard } from '@jutro/wizard-next';
 
-import { submitFnol } from '../../services/claimCenterApi';
+import { saveDraft, submitFnol } from '../../services/claimCenterApi';
 import { usePolicies } from '../policies/PoliciesContext';
 
+import { useDrafts } from './DraftsContext';
 import { useFnol } from './FnolContext';
 import messages from './Fnol.messages';
 import { DateOfLossStep } from './steps/DateOfLossStep';
@@ -34,8 +35,9 @@ const FnolWizardInner = () => {
     const translator = useTranslator();
     const history = useHistory();
     const { showAlert } = useModal();
-    const { draft, reset } = useFnol();
+    const { draft, reset, loadDraft, hasDraft } = useFnol();
     const { getByNumber } = usePolicies();
+    const { reload: reloadDrafts } = useDrafts();
 
     const steps = useMemo<WizardStep[]>(
         () => [
@@ -98,6 +100,7 @@ const FnolWizardInner = () => {
             const result = await submitFnol({ draft, policy });
 
             reset();
+            void reloadDrafts();
             history.push(
                 `/fnol/confirmation/${encodeURIComponent(result.claimNumber)}`
             );
@@ -114,10 +117,34 @@ const FnolWizardInner = () => {
     }, [draft, getByNumber, history, reset, showAlert]);
 
     const handleCancel = useCallback((): boolean => {
-        history.push('/dashboard');
+        if (!hasDraft) {
+            history.push('/dashboard');
+
+            return false;
+        }
+
+        void (async () => {
+            try {
+                const saved = await saveDraft(draft);
+
+                loadDraft(saved);
+                await reloadDrafts();
+            } catch (err) {
+                log.error(
+                    `Save draft failed: ${extractErrorMessage(err)}`
+                );
+                showAlert({
+                    status: 'error',
+                    title: messages.submitErrorTitle,
+                    message: messages.submitError,
+                });
+            } finally {
+                history.push('/dashboard');
+            }
+        })();
 
         return false;
-    }, [history]);
+    }, [draft, hasDraft, history, loadDraft, reloadDrafts, showAlert]);
 
     const wizardButtonProps = useMemo(
         () => ({

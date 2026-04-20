@@ -1,18 +1,14 @@
 import React, { ReactNode, useCallback, useMemo } from 'react';
 
 import type {
-    DamageType,
     FnolDraft,
-    ImpactArea,
     LossCauseCode,
-    VehicleArea,
 } from '../../types/domain';
 
 import { FlowProvider, useFlow } from './flow/FlowContext';
 
-const STORAGE_KEY = 'jdp-fnol-draft';
-
 const EMPTY_DRAFT: FnolDraft = {
+    claimId: null,
     policyNumber: null,
     dateOfLoss: null,
     timeOfLoss: null,
@@ -34,111 +30,18 @@ const EMPTY_DRAFT: FnolDraft = {
     photoCount: 0,
 };
 
-const LOSS_CAUSE_CODES = new Set<LossCauseCode>([
-    'collision',
-    'theft',
-    'vandalism',
-    'glassDamage',
-    'animalCollision',
-    'fire',
-    'flood',
-    'weather',
-    'other',
-]);
-
-const VEHICLE_AREAS = new Set<VehicleArea>([
-    'frontLeft',
-    'frontCenter',
-    'frontRight',
-    'leftSide',
-    'rightSide',
-    'rearLeft',
-    'rearCenter',
-    'rearRight',
-    'roof',
-]);
-
-const DAMAGE_TYPES = new Set<DamageType>([
-    'scratch',
-    'dent',
-    'crack',
-    'brokenLight',
-    'brokenMirror',
-    'shattered',
-    'bentFrame',
-    'other',
-]);
-
-const isNullableString = (v: unknown): boolean =>
-    v === null || v === undefined || typeof v === 'string';
-const isNullableBoolean = (v: unknown): boolean =>
-    v === null || v === undefined || typeof v === 'boolean';
-const isLossCauseCode = (v: unknown): v is LossCauseCode =>
-    typeof v === 'string' && LOSS_CAUSE_CODES.has(v as LossCauseCode);
-const isVehicleArea = (v: unknown): v is VehicleArea =>
-    typeof v === 'string' && VEHICLE_AREAS.has(v as VehicleArea);
-const isDamageType = (v: unknown): v is DamageType =>
-    typeof v === 'string' && DAMAGE_TYPES.has(v as DamageType);
-const isImpactArea = (v: unknown): v is ImpactArea => {
-    if (typeof v !== 'object' || v === null) {
-        return false;
-    }
-    const o = v as Record<string, unknown>;
-
-    return (
-        isVehicleArea(o.area) &&
-        (o.damageType === null || isDamageType(o.damageType))
-    );
-};
-
-const isFnolDraft = (value: unknown): value is Partial<FnolDraft> => {
-    if (typeof value !== 'object' || value === null) {
-        return false;
-    }
-    const d = value as Record<string, unknown>;
-
-    return (
-        isNullableString(d.policyNumber) &&
-        isNullableString(d.dateOfLoss) &&
-        isNullableString(d.timeOfLoss) &&
-        (d.lossCause === null ||
-            d.lossCause === undefined ||
-            isLossCauseCode(d.lossCause)) &&
-        isNullableString(d.lossDescription) &&
-        isNullableString(d.lossLocation) &&
-        (d.impactAreas === undefined ||
-            (Array.isArray(d.impactAreas) &&
-                d.impactAreas.every(isImpactArea))) &&
-        isNullableBoolean(d.vehicleDriveable) &&
-        isNullableString(d.reporterPhone) &&
-        isNullableBoolean(d.injuriesInvolved) &&
-        isNullableString(d.injuryDescription) &&
-        isNullableBoolean(d.policeCalled) &&
-        isNullableString(d.policeReportNumber) &&
-        isNullableString(d.otherPartyName) &&
-        isNullableString(d.otherPartyPhone) &&
-        isNullableString(d.otherPartyInsurer) &&
-        isNullableString(d.otherPartyPlate) &&
-        isNullableString(d.witnessDetails) &&
-        (typeof d.photoCount === 'number' || d.photoCount === undefined)
-    );
-};
-
 export type FnolContextValue = {
     draft: FnolDraft;
     hasDraft: boolean;
     setPolicy: (policyNumber: string) => void;
     setDate: (dateOfLoss: string) => void;
     setLossCause: (lossCause: LossCauseCode) => void;
+    loadDraft: (draft: FnolDraft) => void;
     reset: () => void;
 };
 
 export const FnolProvider = ({ children }: { children: ReactNode }) => (
-    <FlowProvider<FnolDraft>
-        initialValue={EMPTY_DRAFT}
-        storageKey={STORAGE_KEY}
-        validate={isFnolDraft}
-    >
+    <FlowProvider<FnolDraft> initialValue={EMPTY_DRAFT}>
         {children}
     </FlowProvider>
 );
@@ -171,6 +74,10 @@ export const useFnol = (): FnolContextValue => {
         (lossCause: LossCauseCode) => flow.setValue('lossCause', lossCause),
         [flow]
     );
+    const loadDraft = useCallback(
+        (draft: FnolDraft) => flow.patch(draft),
+        [flow]
+    );
 
     return useMemo<FnolContextValue>(
         () => ({
@@ -179,8 +86,9 @@ export const useFnol = (): FnolContextValue => {
             setPolicy,
             setDate,
             setLossCause,
+            loadDraft,
             reset: flow.reset,
         }),
-        [flow.value, flow.reset, setPolicy, setDate, setLossCause]
+        [flow.value, flow.reset, setPolicy, setDate, setLossCause, loadDraft]
     );
 };

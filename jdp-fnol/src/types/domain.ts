@@ -54,7 +54,16 @@ export type ImpactArea = {
     damageType: DamageType | null;
 };
 
+export type DraftSummary = {
+    claimId: string;
+    claimNumber: string | null;
+    policyNumber: string;
+    lossDate: string;
+    updatedAt: string;
+};
+
 export type FnolDraft = {
+    claimId: string | null;
     policyNumber: string | null;
     dateOfLoss: string | null;
     timeOfLoss: string | null;
