@@ -37,7 +37,7 @@ export const SelectPolicyStep = () => {
                 return {
                     code: p.policyNumber,
                     name: suffix
-                        ? `${p.policyNumber} — ${suffix}`
+                        ? `${p.policyNumber} - ${suffix}`
                         : p.policyNumber,
                 };
             }),

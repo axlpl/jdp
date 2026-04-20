@@ -93,7 +93,7 @@ const formatImpactAreas = (areas: ImpactArea[], dash: string): string => {
     return areas
         .map(a =>
             a.damageType
-                ? `${AREA_LABEL[a.area]} — ${DAMAGE_LABEL[a.damageType]}`
+                ? `${AREA_LABEL[a.area]} - ${DAMAGE_LABEL[a.damageType]}`
                 : AREA_LABEL[a.area]
         )
         .join('; ');

@@ -8,7 +8,7 @@ export default defineMessages({
     appDescription: {
         id: 'jdp.app.appDescription',
         defaultMessage:
-            'Customer-centric Auto First Notice of Loss — file a claim in three steps.',
+            'Customer-centric Auto First Notice of Loss - file a claim in three steps.',
     },
     dashboardTitle: {
         id: 'jdp.app.route.dashboard',

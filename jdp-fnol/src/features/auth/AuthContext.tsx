@@ -72,7 +72,7 @@ const writeSession = (credentials: Credentials | null): void => {
             );
         }
     } catch {
-        /* storage unavailable (private mode, quota) — ignore */
+        /* storage unavailable (private mode, quota) - ignore */
     }
 };
 
@@ -113,7 +113,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         );
         registerLogoutHandler(logout);
         registerUnauthorizedHandler(() => {
-            // Ignore probes — LoginPage surfaces the 401 itself.
+            // Ignore probes - LoginPage surfaces the 401 itself.
             if (stagedRef.current !== null) {
                 return;
             }

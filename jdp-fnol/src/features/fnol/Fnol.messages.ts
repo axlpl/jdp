@@ -198,7 +198,7 @@ export default defineMessages({
     stepOtherHeading: {
         id: 'jdp.fnol.step.other.heading',
         defaultMessage:
-            'Add injury, report, or witness details — skip if not applicable.',
+            'Add injury, report, or witness details - skip if not applicable.',
     },
     stepOtherInjuriesLabel: {
         id: 'jdp.fnol.step.other.injuriesLabel',
@@ -304,19 +304,19 @@ export default defineMessages({
     },
     reviewFieldOtherPartyName: {
         id: 'jdp.fnol.review.field.otherPartyName',
-        defaultMessage: 'Other party — name',
+        defaultMessage: 'Other party - name',
     },
     reviewFieldOtherPartyPhone: {
         id: 'jdp.fnol.review.field.otherPartyPhone',
-        defaultMessage: 'Other party — phone',
+        defaultMessage: 'Other party - phone',
     },
     reviewFieldOtherPartyInsurer: {
         id: 'jdp.fnol.review.field.otherPartyInsurer',
-        defaultMessage: 'Other party — insurer',
+        defaultMessage: 'Other party - insurer',
     },
     reviewFieldOtherPartyPlate: {
         id: 'jdp.fnol.review.field.otherPartyPlate',
-        defaultMessage: 'Other party — plate',
+        defaultMessage: 'Other party - plate',
     },
     reviewFieldPhotos: {
         id: 'jdp.fnol.review.field.photos',
@@ -389,7 +389,7 @@ export default defineMessages({
     },
     reviewNotProvided: {
         id: 'jdp.fnol.review.notProvided',
-        defaultMessage: '—',
+        defaultMessage: '-',
     },
     submitErrorTitle: {
         id: 'jdp.fnol.submit.error.title',
@@ -564,7 +564,7 @@ export default defineMessages({
     },
     locationCustomOption: {
         id: 'jdp.fnol.location.customOption',
-        defaultMessage: 'New address — {value}',
+        defaultMessage: 'New address - {value}',
     },
 
     vehicleAddButton: {
@@ -577,7 +577,7 @@ export default defineMessages({
     },
     vehicleCustomOption: {
         id: 'jdp.fnol.vehicle.customOption',
-        defaultMessage: 'New vehicle — {value}',
+        defaultMessage: 'New vehicle - {value}',
     },
     vehicleYearInvalid: {
         id: 'jdp.fnol.vehicle.yearInvalid',
@@ -594,7 +594,7 @@ export default defineMessages({
     },
     driverCustomOption: {
         id: 'jdp.fnol.driver.customOption',
-        defaultMessage: 'New driver — {value}',
+        defaultMessage: 'New driver - {value}',
     },
     driverEmailInvalid: {
         id: 'jdp.fnol.driver.emailInvalid',
