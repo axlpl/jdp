@@ -1,3 +1,5 @@
+import { currentYear } from '../utils/date';
+
 export const MAX_LEN = {
     addressLine: 60,
     city: 60,
@@ -30,7 +32,7 @@ export const isYearOrEmpty = (s: string | null | undefined): boolean => {
     }
     const n = Number.parseInt(s, 10);
 
-    return n >= 1900 && n <= new Date().getFullYear() + 1;
+    return n >= 1900 && n <= currentYear() + 1;
 };
 
 export const withinLength = (

@@ -1,5 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useMemo, useState } from 'react';
 
 import { RadioField } from '@jutro/legacy/components';
 import { useTranslator } from '@jutro/locale';
@@ -13,19 +12,9 @@ import styles from '../Fnol.module.scss';
 
 export const SelectPolicyStep = () => {
     const translator = useTranslator();
-    const location = useLocation();
     const { draft, setPolicy } = useFnol();
     const { policies, status } = usePolicies();
     const [showError, setShowError] = useState(false);
-
-    useEffect(() => {
-        const params = new URLSearchParams(location.search);
-        const preselect = params.get('policyNumber');
-
-        if (preselect && !draft.policyNumber) {
-            setPolicy(preselect);
-        }
-    }, [location.search, draft.policyNumber, setPolicy]);
 
     const availableValues = useMemo(
         () =>

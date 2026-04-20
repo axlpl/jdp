@@ -35,7 +35,7 @@
 }
 
 .errorText {
-    color: var(--GW-COLOR-ERROR-2, #b42318);
+    color: var(--GW-COLOR-ERROR);
     margin: 0;
 }
 
@@ -44,7 +44,7 @@
     flex-direction: column;
     gap: var(--GW-LAYOUT-4);
     padding-top: var(--GW-LAYOUT-4);
-    border-top: 1px dashed var(--GW-BORDER-COLOR);
+    border-top: var(--GW-BORDER-WIDTH) dashed var(--GW-BORDER-COLOR);
 }
 
 .damageList {
@@ -66,7 +66,7 @@
     flex-direction: column;
     gap: var(--GW-LAYOUT-3);
     padding-top: var(--GW-LAYOUT-4);
-    border-top: 1px dashed var(--GW-BORDER-COLOR);
+    border-top: var(--GW-BORDER-WIDTH) dashed var(--GW-BORDER-COLOR);
 }
 
 .pickerSection > button {
@@ -103,7 +103,7 @@
 }
 
 .reviewSection {
-    border-top: 1px solid var(--GW-BORDER-COLOR);
+    border-top: var(--GW-BORDER-WIDTH) solid var(--GW-BORDER-COLOR);
     padding-top: var(--GW-LAYOUT-5);
     display: flex;
     flex-direction: column;
@@ -159,15 +159,15 @@
 }
 
 .successBadge {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    background: rgba(16, 168, 92, 0.15);
+    width: var(--GW-LAYOUT-12);
+    height: var(--GW-LAYOUT-12);
+    border-radius: var(--GW-BORDER-RADIUS-FULL);
+    background: var(--GW-COLOR-SUCCESS-BACKGROUND);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 32px;
-    color: #0f7a43;
+    font-size: var(--GW-FONT-SIZE-H2);
+    color: var(--GW-COLOR-SUCCESS);
 }
 
 .confirmationTitle {
@@ -184,9 +184,9 @@
 .claimNumber {
     display: inline-block;
     font-family: var(--GW-FONT-FAMILY-MONO, monospace);
-    font-weight: 700;
-    padding: 2px 8px;
-    background: var(--GW-COLOR-BACKGROUND-2, #f6f8fb);
-    border-radius: 4px;
+    font-weight: var(--GW-FONT-WEIGHT-BOLD);
+    padding: var(--GW-SPACING-1) var(--GW-SPACING-3);
+    background: var(--GW-COLOR-BACKGROUND-2);
+    border-radius: var(--GW-BORDER-RADIUS);
     letter-spacing: 0.5px;
 }

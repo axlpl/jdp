@@ -6,6 +6,7 @@ import { useTranslator } from '@jutro/locale';
 
 import type { Policy, PolicyStatus } from '../../types/domain';
 import { formatDate } from '../../utils/date';
+import { useFnol } from '../fnol/FnolContext';
 
 import messages from './Dashboard.messages';
 
@@ -27,12 +28,14 @@ const STATUS_VARIANT: Record<PolicyStatus, InfoLabelVariant> = {
 export const PolicyCard = ({ policy }: Props) => {
     const translator = useTranslator();
     const history = useHistory();
+    const { reset: resetDraft } = useFnol();
 
     const handleFileClaim = useCallback(() => {
+        resetDraft();
         history.push(
             `/fnol/new?policyNumber=${encodeURIComponent(policy.policyNumber)}`
         );
-    }, [history, policy.policyNumber]);
+    }, [history, policy.policyNumber, resetDraft]);
 
     return (
         <Card isPanel>
@@ -66,7 +69,7 @@ export const PolicyCard = ({ policy }: Props) => {
                         {translator(messages.colPeriod)}
                     </span>
                     <span className={styles.metaValue}>
-                        {formatDate(policy.effectiveDate)} –{' '}
+                        {formatDate(policy.effectiveDate)} -{' '}
                         {formatDate(policy.expirationDate)}
                     </span>
                     <span className={styles.metaLabel}>Holder</span>

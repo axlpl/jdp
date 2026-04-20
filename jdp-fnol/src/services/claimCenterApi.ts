@@ -35,6 +35,7 @@ import type {
     PolicyLocation,
     PolicyVehicle,
 } from '../types/domain';
+import { nowIso } from '../utils/date';
 
 import {
     executeCommonCall,
@@ -75,7 +76,6 @@ export const getLossCauses = async (): Promise<readonly LossCause[]> => {
 
 const MOCK_DRAFT_STORE = new Map<string, ClaimResourceDto>();
 
-const nowIso = (): string => new Date().toISOString();
 
 const mockId = (claimNumber: string): string => `cc:mock:${claimNumber}`;
 
@@ -153,7 +153,7 @@ export const updateDraft = async (
         const existing = MOCK_DRAFT_STORE.get(draft.claimId);
 
         if (!existing) {
-            throw new Error(`Draft ${draft.claimId} not found`);
+            return createDraft({ ...draft, claimId: null });
         }
         MOCK_DRAFT_STORE.set(
             draft.claimId,

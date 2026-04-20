@@ -12,6 +12,7 @@ import type {
     VehicleArea,
 } from '../../../types/domain';
 import { formatDate } from '../../../utils/date';
+import { resolvePicked } from '../../../types/mappers';
 import { useFnol } from '../FnolContext';
 import messages from '../Fnol.messages';
 import { LOSS_CAUSES } from '../lossCauses';
@@ -66,24 +67,21 @@ const DAMAGE_LABEL: Record<DamageType, string> = {
     other: 'Other',
 };
 
-type Pickable = { id: string; displayName: string };
+type Named = { id: string; displayName: string };
 
-const pickedOrNewLabel = <Item extends Pickable, Value>(
+const pickedOrNewLabel = <Item extends Named, Value>(
     pickedId: string | null,
     items: Item[],
     newValue: Value | null,
     formatNew: (v: Value) => string
-): string => {
-    if (pickedId) {
-        const found = items.find(x => x.id === pickedId);
-
-        if (found) {
-            return found.displayName;
-        }
-    }
-
-    return newValue ? formatNew(newValue) : '';
-};
+): string =>
+    resolvePicked<Item, Value, string>(
+        pickedId,
+        items,
+        newValue,
+        item => item.displayName,
+        formatNew
+    ) ?? '';
 
 const formatImpactAreas = (areas: ImpactArea[], dash: string): string => {
     if (areas.length === 0) {

@@ -21,11 +21,11 @@ const AuthSwitch = () => {
 
     return (
         <PoliciesProvider>
-            <DraftsProvider>
-                <FnolProvider>
+            <FnolProvider>
+                <DraftsProvider>
                     <AppFloorPlan floorPlans={floorPlans} />
-                </FnolProvider>
-            </DraftsProvider>
+                </DraftsProvider>
+            </FnolProvider>
         </PoliciesProvider>
     );
 };

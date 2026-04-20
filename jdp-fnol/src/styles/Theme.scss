@@ -4,3 +4,7 @@ $fonts-root: '~@jutro/theme/assets/fonts';
 //   GROUNDED CSS MODULES
 // ------------------------------------
 @import '~@jutro/theme/assets/fonts/fonts';
+
+// JDP design-token overrides — generated from src/styles/tokens/tokens.json
+// via `npm run gen:themes`. Regenerate after editing tokens.json.
+@import '../assets/generated-themes/jdp-theme.css';

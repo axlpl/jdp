@@ -391,6 +391,14 @@ export default defineMessages({
         id: 'jdp.fnol.review.notProvided',
         defaultMessage: '-',
     },
+    saveDraftErrorTitle: {
+        id: 'jdp.fnol.saveDraft.errorTitle',
+        defaultMessage: 'Could not save draft',
+    },
+    saveDraftError: {
+        id: 'jdp.fnol.saveDraft.error',
+        defaultMessage: 'We could not save your draft. Please try again.',
+    },
     submitErrorTitle: {
         id: 'jdp.fnol.submit.error.title',
         defaultMessage: 'Submission failed',

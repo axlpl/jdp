@@ -38,8 +38,8 @@
     gap: var(--GW-LAYOUT-4);
     padding: var(--GW-LAYOUT-4) var(--GW-LAYOUT-5);
     background: var(--GW-COLOR-BACKGROUND-1);
-    border: 1px solid var(--GW-BORDER-COLOR);
-    border-left: 4px solid var(--GW-COLOR-WARNING-1, #f59e0b);
+    border: var(--GW-BORDER-WIDTH) solid var(--GW-BORDER-COLOR);
+    border-left: var(--GW-LAYOUT-1) solid var(--GW-COLOR-WARNING);
     border-radius: var(--GW-BORDER-RADIUS);
     flex-wrap: wrap;
 }
@@ -47,7 +47,7 @@
 .draftBannerText {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: var(--GW-LAYOUT-1);
     flex: 1 1 280px;
     min-width: 0;
 }

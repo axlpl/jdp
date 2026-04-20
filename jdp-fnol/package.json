@@ -51,6 +51,7 @@
     "test:ci": "cross-env CI=true npm test --collectCoverage",
     "typecheck": "tsc --noEmit",
     "gen:sdk": "node scripts/prepare-sdk-config.mjs && jutro generate:digital-sdk --configPath ./ --outputPath ./src/generated",
+    "gen:themes": "jutro generate:themes",
     "validate-file-structure": "jutro validate:folders",
     "lint:js": "cross-env eslint -c .eslintrc.js './**/*.{js,jsx,mjs,json,ts,tsx}'",
     "lint:css": "cross-env stylelint \"**/*.scss\"",

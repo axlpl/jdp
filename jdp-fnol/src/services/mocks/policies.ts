@@ -1,20 +1,8 @@
 import type { PolicyResourceDto } from '../../types/dto/policy';
+import { addMonths, addYears, nowIso } from '../../utils/date';
 
-const in12Months = (() => {
-    const d = new Date();
-
-    d.setFullYear(d.getFullYear() + 1);
-
-    return d.toISOString();
-})();
-
-const monthsAgo = (months: number): string => {
-    const d = new Date();
-
-    d.setMonth(d.getMonth() - months);
-
-    return d.toISOString();
-};
+const in12Months = addYears(nowIso(), 1);
+const monthsAgo = (months: number): string => addMonths(nowIso(), -months);
 
 const holder = {
     id: 'pc:contact:1001',

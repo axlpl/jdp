@@ -1,0 +1,16 @@
+/**
+ * Do not edit directly
+ * Generated on Mon, 20 Apr 2026 13:06:19 GMT
+ */
+
+.themeRoot,
+.themeRoot.dynamicRoot {
+  --JDS-COLOR-PALETTE-BRAND-50: #2563eb;
+  --JDS-COLOR-PALETTE-BRAND-60: #1d4ed8;
+  --JDS-COLOR-PALETTE-BRAND-70: #1e40af;
+  --JDS-FONT-FAMILY-BODY: "Source Sans Pro", "Helvetica", "Arial", sans-serif;
+  --JDS-FONT-FAMILY-HEADING: "Source Sans Pro", "Helvetica", "Arial", sans-serif;
+  --JDS-FONT-FAMILY-LABEL: "Source Sans Pro", "Helvetica", "Arial", sans-serif;
+  --JDS-FONT-FAMILY-MONOSPACE: "Source Code Pro", "Courier New", "Courier",
+    monospace;
+}

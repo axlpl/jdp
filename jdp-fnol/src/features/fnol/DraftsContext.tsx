@@ -5,6 +5,7 @@ import React, {
     useContext,
     useEffect,
     useMemo,
+    useRef,
     useState,
 } from 'react';
 
@@ -13,6 +14,8 @@ import { log } from '@jutro/logger';
 import { discardDraft, listDrafts } from '../../services/claimCenterApi';
 import type { DraftSummary, LoadStatus } from '../../types/domain';
 import { useAuth } from '../auth/AuthContext';
+
+import { useFnol } from './FnolContext';
 
 export type DraftsContextValue = {
     drafts: DraftSummary[];
@@ -25,8 +28,15 @@ const DraftsContext = createContext<DraftsContextValue | null>(null);
 
 export const DraftsProvider = ({ children }: { children: ReactNode }) => {
     const { isAuthenticated } = useAuth();
+    const { draft, reset: resetDraft } = useFnol();
     const [drafts, setDrafts] = useState<DraftSummary[]>([]);
     const [status, setStatus] = useState<LoadStatus>('idle');
+
+    const currentDraftClaimIdRef = useRef(draft.claimId);
+
+    useEffect(() => {
+        currentDraftClaimIdRef.current = draft.claimId;
+    }, [draft.claimId]);
 
     const reload = useCallback(async () => {
         setStatus('loading');
@@ -45,8 +55,11 @@ export const DraftsProvider = ({ children }: { children: ReactNode }) => {
         async (claimId: string) => {
             await discardDraft(claimId);
             setDrafts(prev => prev.filter(d => d.claimId !== claimId));
+            if (currentDraftClaimIdRef.current === claimId) {
+                resetDraft();
+            }
         },
-        []
+        [resetDraft]
     );
 
     useEffect(() => {

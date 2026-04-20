@@ -5,7 +5,7 @@ import { useTranslator } from '@jutro/locale';
 import { WizardPage } from '@jutro/wizard-next';
 
 import type { FnolDraft, Policy } from '../../../types/domain';
-import { formatDate, startOfDay } from '../../../utils/date';
+import { formatDate, startOfDayTs, todayStartTs } from '../../../utils/date';
 import { usePolicies } from '../../policies/PoliciesContext';
 import { useFnol } from '../FnolContext';
 import { useFlow } from '../flow/FlowContext';
@@ -23,10 +23,9 @@ const validate = (
         return 'required';
     }
 
-    const lossTs = startOfDay(dateOfLoss);
-    const todayTs = startOfDay(new Date().toISOString());
+    const lossTs = startOfDayTs(dateOfLoss);
 
-    if (lossTs > todayTs) {
+    if (lossTs > todayStartTs()) {
         return 'future';
     }
 
@@ -34,8 +33,8 @@ const validate = (
         return null;
     }
 
-    const effectiveTs = startOfDay(policy.effectiveDate);
-    const expirationTs = startOfDay(policy.expirationDate);
+    const effectiveTs = startOfDayTs(policy.effectiveDate);
+    const expirationTs = startOfDayTs(policy.expirationDate);
 
     if (lossTs < effectiveTs) {
         return 'beforePolicy';

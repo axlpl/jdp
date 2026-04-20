@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { Button, useModal } from '@jutro/components';
+import { confirmationResult } from '@jutro/components/widgets/modal-next/ConfirmationModal/ConfirmationModal';
 import { InputField } from '@jutro/legacy/components';
 import { Grid, GridItem } from '@jutro/layout';
 import { useTranslator } from '@jutro/locale';
@@ -14,6 +15,7 @@ import { useDrafts } from '../fnol/DraftsContext';
 import { useFnol } from '../fnol/FnolContext';
 import { usePolicies } from '../policies/PoliciesContext';
 
+import { DraftCard } from './DraftCard';
 import messages from './Dashboard.messages';
 import { PolicyCard } from './PolicyCard';
 
@@ -38,12 +40,6 @@ const matchesQuery = (policy: Policy, query: string): boolean => {
     return haystack.includes(q);
 };
 
-const formatDate = (iso: string): string => {
-    const d = new Date(iso);
-
-    return Number.isNaN(d.getTime()) ? iso : d.toLocaleDateString();
-};
-
 export const Dashboard = () => {
     const translator = useTranslator();
     const history = useHistory();
@@ -64,8 +60,14 @@ export const Dashboard = () => {
                 const loaded = await getDraft(summary.claimId);
 
                 loadDraft(loaded);
-                history.push('/fnol/new');
+                const policyParam = loaded.policyNumber
+                    ? `?policyNumber=${encodeURIComponent(loaded.policyNumber)}`
+                    : '';
+
+                history.push(`/fnol/new${policyParam}`);
             } catch (err) {
+                // eslint-disable-next-line no-console
+                console.error('[FNOL resume draft] failed:', err);
                 log.error(
                     `Resume draft failed: ${err instanceof Error ? err.message : String(err)}`
                 );
@@ -84,7 +86,7 @@ export const Dashboard = () => {
                 cancelButtonText: messages.draftDiscardCancel,
             });
 
-            if (result === 'CONFIRM') {
+            if (result === confirmationResult.CONFIRM) {
                 await discard(summary.claimId);
             }
         },
@@ -119,54 +121,19 @@ export const Dashboard = () => {
 
         return (
             <Grid
-                gap="medium"
-                columns={['1fr', '1fr']}
+                gap="large"
+                columns={['1fr', '1fr', '1fr']}
+                tablet={{ columns: ['1fr', '1fr'] }}
                 phoneWide={{ columns: ['1fr'] }}
                 phone={{ columns: ['1fr'] }}
             >
                 {drafts.map(draft => (
                     <GridItem key={draft.claimId}>
-                        <div className={styles.draftCard}>
-                            <h3>
-                                {translator(messages.draftCardTitle, {
-                                    claimNumber: draft.claimNumber ?? draft.claimId,
-                                })}
-                            </h3>
-                            <p>
-                                {translator(messages.draftCardPolicy, {
-                                    policyNumber: draft.policyNumber,
-                                })}
-                            </p>
-                            <p>
-                                {translator(messages.draftCardLoss, {
-                                    lossDate: formatDate(draft.lossDate),
-                                })}
-                            </p>
-                            <p>
-                                {translator(messages.draftCardUpdated, {
-                                    updatedAt: formatDate(draft.updatedAt),
-                                })}
-                            </p>
-                            <div className={styles.draftCardActions}>
-                                <Button
-                                    id={`resumeDraft-${draft.claimId}`}
-                                    onClick={() => void resumeDraft(draft)}
-                                    label={translator(
-                                        messages.draftBannerContinue
-                                    )}
-                                />
-                                <Button
-                                    id={`discardDraft-${draft.claimId}`}
-                                    variant="tertiary"
-                                    onClick={() =>
-                                        void handleDiscardDraft(draft)
-                                    }
-                                    label={translator(
-                                        messages.draftBannerDiscard
-                                    )}
-                                />
-                            </div>
-                        </div>
+                        <DraftCard
+                            draft={draft}
+                            onResume={d => void resumeDraft(d)}
+                            onDiscard={d => void handleDiscardDraft(d)}
+                        />
                     </GridItem>
                 ))}
             </Grid>

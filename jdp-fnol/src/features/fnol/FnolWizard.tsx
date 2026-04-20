@@ -1,5 +1,5 @@
-import React, { useCallback, useMemo } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { useModal } from '@jutro/components';
 import { useTranslator } from '@jutro/locale';
@@ -38,11 +38,46 @@ const extractErrorMessage = (err: unknown): string =>
 const FnolWizardInner = () => {
     const translator = useTranslator();
     const history = useHistory();
+    const location = useLocation();
     const { showAlert } = useModal();
-    const { draft, reset, loadDraft, hasDraft } = useFnol();
+    const { draft, reset, loadDraft, hasDraft, setPolicy } = useFnol();
     const { getByNumber } = usePolicies();
     const { reload: reloadDrafts } = useDrafts();
     const resources = usePolicyResources();
+
+    const preselectedPolicy = useMemo(
+        () => new URLSearchParams(location.search).get('policyNumber'),
+        [location.search]
+    );
+
+    const [initialStepPath] = useState(() => {
+        const policyNumber = draft.policyNumber ?? preselectedPolicy;
+
+        if (!policyNumber) {
+            return 'policy';
+        }
+        if (!draft.dateOfLoss) {
+            return 'date';
+        }
+        if (!draft.lossCause) {
+            return 'cause';
+        }
+        if (
+            !draft.lossDescription ||
+            (!draft.lossLocationId && !draft.newLossAddress) ||
+            (!draft.vehicleId && !draft.newVehicle)
+        ) {
+            return 'details';
+        }
+
+        return 'review';
+    });
+
+    useEffect(() => {
+        if (preselectedPolicy && !draft.policyNumber) {
+            setPolicy(preselectedPolicy);
+        }
+    }, [preselectedPolicy, draft.policyNumber, setPolicy]);
 
     const steps = useMemo<WizardStep[]>(
         () => [
@@ -140,13 +175,15 @@ const FnolWizardInner = () => {
                 loadDraft(saved);
                 await reloadDrafts();
             } catch (err) {
+                // eslint-disable-next-line no-console
+                console.error('[FNOL save draft] failed:', err);
                 log.error(
                     `Save draft failed: ${extractErrorMessage(err)}`
                 );
                 showAlert({
                     status: 'error',
-                    title: messages.submitErrorTitle,
-                    message: messages.submitError,
+                    title: messages.saveDraftErrorTitle,
+                    message: messages.saveDraftError,
                 });
             } finally {
                 history.push('/dashboard');
@@ -189,7 +226,7 @@ const FnolWizardInner = () => {
             basePath="/fnol/new"
             baseRoute="/fnol/new"
             steps={steps}
-            initialStepPath="policy"
+            initialStepPath={initialStepPath}
             onFinish={handleFinish}
             onCancel={handleCancel}
             cancelPath="/dashboard"

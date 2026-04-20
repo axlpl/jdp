@@ -10,6 +10,7 @@ import type {
 } from './dto/policy';
 import type { TypeKeyDto } from './dto/typelist';
 import { LOSS_CAUSES } from '../features/fnol/lossCauses';
+import { isExpired } from '../utils/date';
 
 import type {
     ClaimReceipt,
@@ -64,9 +65,27 @@ const toLossCauseCode = (code: string | undefined): LossCauseCode | null => {
     return null;
 };
 
+const toIsoString = (value: unknown): string | null => {
+    if (value == null || value === '') {
+        return null;
+    }
+    if (value instanceof Date) {
+        return Number.isNaN(value.getTime()) ? null : value.toISOString();
+    }
+    if (typeof value === 'number') {
+        const d = new Date(value);
+
+        return Number.isNaN(d.getTime()) ? null : d.toISOString();
+    }
+
+    return String(value);
+};
+
 const splitDateAndTime = (
-    iso: string | undefined
+    value: unknown
 ): { date: string | null; time: string | null } => {
+    const iso = toIsoString(value);
+
     if (!iso) {
         return { date: null, time: null };
     }
@@ -79,18 +98,8 @@ const splitDateAndTime = (
     return { date: iso.slice(0, t), time: iso.slice(t + 1, t + 6) };
 };
 
-const deriveStatus = (periodEnd: string): 'In Force' | 'Expired' => {
-    if (!periodEnd) {
-        return 'In Force';
-    }
-    const end = new Date(periodEnd).getTime();
-
-    if (Number.isNaN(end)) {
-        return 'In Force';
-    }
-
-    return end < Date.now() ? 'Expired' : 'In Force';
-};
+const deriveStatus = (periodEnd: string): 'In Force' | 'Expired' =>
+    isExpired(periodEnd) ? 'Expired' : 'In Force';
 
 export const toPolicy = (dto: PolicyResourceDto): Policy => {
     const a = dto.attributes;
@@ -192,11 +201,16 @@ export const toClaimReceipt = (
         'Open',
 });
 
-const combineDateTime = (date: string, time: string | null): string => {
+const combineDateTime = (
+    date: unknown,
+    time: string | null
+): string => {
+    const iso = toIsoString(date) ?? '';
+
     if (!time) {
-        return date;
+        return iso;
     }
-    const datePart = date.length >= 10 ? date.slice(0, 10) : date;
+    const datePart = iso.length >= 10 ? iso.slice(0, 10) : iso;
 
     return `${datePart}T${time}:00`;
 };
@@ -213,6 +227,26 @@ export const isDraftSubmittable = (
     draft.policyNumber !== null &&
     draft.dateOfLoss !== null &&
     draft.lossCause !== null;
+
+type Identifiable = { id: string };
+
+export const resolvePicked = <Item extends Identifiable, New, Out>(
+    pickedId: string | null,
+    items: readonly Item[],
+    newValue: New | null,
+    fromPicked: (item: Item) => Out,
+    fromNew: (value: New) => Out | null
+): Out | null => {
+    if (pickedId) {
+        const match = items.find(item => item.id === pickedId);
+
+        if (match) {
+            return fromPicked(match);
+        }
+    }
+
+    return newValue !== null ? fromNew(newValue) : null;
+};
 
 const buildLossLocation = (
     draft: FnolDraft,

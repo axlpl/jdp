@@ -70,6 +70,10 @@ export default defineMessages({
         defaultMessage:
             '{count, plural, one {# policy} other {# policies}}',
     },
+    draftCardBadge: {
+        id: 'jdp.dashboard.draftCard.badge',
+        defaultMessage: 'Draft',
+    },
     draftsSectionTitle: {
         id: 'jdp.dashboard.drafts.title',
         defaultMessage: 'Draft claims',
@@ -90,13 +94,13 @@ export default defineMessages({
         id: 'jdp.dashboard.draftCard.policy',
         defaultMessage: 'Policy {policyNumber}',
     },
-    draftCardLoss: {
-        id: 'jdp.dashboard.draftCard.loss',
-        defaultMessage: 'Loss date {lossDate}',
+    draftCardLossLabel: {
+        id: 'jdp.dashboard.draftCard.lossLabel',
+        defaultMessage: 'Loss date',
     },
-    draftCardUpdated: {
-        id: 'jdp.dashboard.draftCard.updated',
-        defaultMessage: 'Last saved {updatedAt}',
+    draftCardUpdatedLabel: {
+        id: 'jdp.dashboard.draftCard.updatedLabel',
+        defaultMessage: 'Last saved',
     },
     draftBannerContinue: {
         id: 'jdp.dashboard.draftBanner.continue',
