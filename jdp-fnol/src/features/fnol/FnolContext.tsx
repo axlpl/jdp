@@ -1,19 +1,25 @@
 import React, { ReactNode, useCallback, useMemo } from 'react';
 
-import type { FnolDraft, LossCauseCode, PointOfImpact } from '../../types/domain';
+import type {
+    DamageType,
+    FnolDraft,
+    ImpactArea,
+    LossCauseCode,
+    VehicleArea,
+} from '../../types/domain';
 
 import { FlowProvider, useFlow } from './flow/FlowContext';
 
 const STORAGE_KEY = 'jdp-fnol-draft';
 
-export const EMPTY_DRAFT: FnolDraft = {
+const EMPTY_DRAFT: FnolDraft = {
     policyNumber: null,
     dateOfLoss: null,
     timeOfLoss: null,
     lossCause: null,
     lossDescription: null,
     lossLocation: null,
-    pointOfImpact: null,
+    impactAreas: [],
     vehicleDriveable: null,
     reporterPhone: null,
     injuriesInvolved: null,
@@ -40,12 +46,27 @@ const LOSS_CAUSE_CODES = new Set<LossCauseCode>([
     'other',
 ]);
 
-const POINT_OF_IMPACT_CODES = new Set<PointOfImpact>([
-    'front',
-    'rear',
-    'left',
-    'right',
-    'multiple',
+const VEHICLE_AREAS = new Set<VehicleArea>([
+    'frontLeft',
+    'frontCenter',
+    'frontRight',
+    'leftSide',
+    'rightSide',
+    'rearLeft',
+    'rearCenter',
+    'rearRight',
+    'roof',
+]);
+
+const DAMAGE_TYPES = new Set<DamageType>([
+    'scratch',
+    'dent',
+    'crack',
+    'brokenLight',
+    'brokenMirror',
+    'shattered',
+    'bentFrame',
+    'other',
 ]);
 
 const isNullableString = (v: unknown): boolean =>
@@ -54,8 +75,21 @@ const isNullableBoolean = (v: unknown): boolean =>
     v === null || v === undefined || typeof v === 'boolean';
 const isLossCauseCode = (v: unknown): v is LossCauseCode =>
     typeof v === 'string' && LOSS_CAUSE_CODES.has(v as LossCauseCode);
-const isPointOfImpact = (v: unknown): v is PointOfImpact =>
-    typeof v === 'string' && POINT_OF_IMPACT_CODES.has(v as PointOfImpact);
+const isVehicleArea = (v: unknown): v is VehicleArea =>
+    typeof v === 'string' && VEHICLE_AREAS.has(v as VehicleArea);
+const isDamageType = (v: unknown): v is DamageType =>
+    typeof v === 'string' && DAMAGE_TYPES.has(v as DamageType);
+const isImpactArea = (v: unknown): v is ImpactArea => {
+    if (typeof v !== 'object' || v === null) {
+        return false;
+    }
+    const o = v as Record<string, unknown>;
+
+    return (
+        isVehicleArea(o.area) &&
+        (o.damageType === null || isDamageType(o.damageType))
+    );
+};
 
 const isFnolDraft = (value: unknown): value is Partial<FnolDraft> => {
     if (typeof value !== 'object' || value === null) {
@@ -72,9 +106,9 @@ const isFnolDraft = (value: unknown): value is Partial<FnolDraft> => {
             isLossCauseCode(d.lossCause)) &&
         isNullableString(d.lossDescription) &&
         isNullableString(d.lossLocation) &&
-        (d.pointOfImpact === null ||
-            d.pointOfImpact === undefined ||
-            isPointOfImpact(d.pointOfImpact)) &&
+        (d.impactAreas === undefined ||
+            (Array.isArray(d.impactAreas) &&
+                d.impactAreas.every(isImpactArea))) &&
         isNullableBoolean(d.vehicleDriveable) &&
         isNullableString(d.reporterPhone) &&
         isNullableBoolean(d.injuriesInvolved) &&
@@ -109,9 +143,15 @@ export const FnolProvider = ({ children }: { children: ReactNode }) => (
     </FlowProvider>
 );
 
+const DRAFT_KEYS = Object.keys(EMPTY_DRAFT) as Array<keyof FnolDraft>;
+
 const isNonEmpty = (draft: FnolDraft): boolean =>
-    (Object.keys(EMPTY_DRAFT) as Array<keyof FnolDraft>).some(key => {
+    DRAFT_KEYS.some(key => {
         const value = draft[key];
+
+        if (Array.isArray(value)) {
+            return value.length > 0;
+        }
 
         return value !== null && value !== EMPTY_DRAFT[key];
     });

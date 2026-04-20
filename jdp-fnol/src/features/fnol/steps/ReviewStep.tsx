@@ -1,10 +1,16 @@
-import React, { ReactNode, useMemo } from 'react';
+import React, { ReactNode } from 'react';
 
 import { Icon } from '@jutro/components';
 import { useTranslator } from '@jutro/locale';
 import { WizardPage } from '@jutro/wizard-next';
 
-import type { FnolDraft, LossCause } from '../../../types/domain';
+import type {
+    DamageType,
+    FnolDraft,
+    ImpactArea,
+    LossCause,
+    VehicleArea,
+} from '../../../types/domain';
 import { formatDate } from '../../../utils/date';
 import { usePolicies } from '../../policies/PoliciesContext';
 import { useFnol } from '../FnolContext';
@@ -37,6 +43,43 @@ const lossCauseLabel = (code: FnolDraft['lossCause']): string => {
     return found?.displayName ?? code;
 };
 
+const AREA_LABEL: Record<VehicleArea, string> = {
+    frontLeft: 'Front left',
+    frontCenter: 'Front center',
+    frontRight: 'Front right',
+    leftSide: 'Left side',
+    rightSide: 'Right side',
+    rearLeft: 'Rear left',
+    rearCenter: 'Rear center',
+    rearRight: 'Rear right',
+    roof: 'Roof',
+};
+
+const DAMAGE_LABEL: Record<DamageType, string> = {
+    scratch: 'Scratch',
+    dent: 'Dent',
+    crack: 'Crack',
+    brokenLight: 'Broken light',
+    brokenMirror: 'Broken mirror',
+    shattered: 'Shattered glass',
+    bentFrame: 'Bent frame',
+    other: 'Other',
+};
+
+const formatImpactAreas = (areas: ImpactArea[], dash: string): string => {
+    if (areas.length === 0) {
+        return dash;
+    }
+
+    return areas
+        .map(a =>
+            a.damageType
+                ? `${AREA_LABEL[a.area]} — ${DAMAGE_LABEL[a.damageType]}`
+                : AREA_LABEL[a.area]
+        )
+        .join('; ');
+};
+
 export const ReviewStep = () => {
     const translator = useTranslator();
     const { draft } = useFnol();
@@ -58,8 +101,7 @@ export const ReviewStep = () => {
             : translator(messages.reviewNo);
     };
 
-    const sections: ReviewSection[] = useMemo(
-        () => [
+    const sections: ReviewSection[] = [
             {
                 key: 'policy',
                 title: translator(messages.reviewSectionPolicy),
@@ -112,7 +154,7 @@ export const ReviewStep = () => {
                     {
                         key: 'impact',
                         label: translator(messages.reviewFieldImpact),
-                        value: renderValue(draft.pointOfImpact),
+                        value: formatImpactAreas(draft.impactAreas, dash),
                     },
                     {
                         key: 'driveable',
@@ -200,9 +242,7 @@ export const ReviewStep = () => {
                     },
                 ],
             },
-        ],
-        [draft, policy, dash, translator]
-    );
+    ];
 
     return (
         <WizardPage

@@ -95,29 +95,85 @@ export default defineMessages({
         id: 'jdp.fnol.step.details.required',
         defaultMessage: 'Please describe what happened and where.',
     },
-    stepDetailsImpactLabel: {
-        id: 'jdp.fnol.step.details.impactLabel',
-        defaultMessage: 'Point of impact',
+    stepDetailsImpactTitle: {
+        id: 'jdp.fnol.step.details.impactTitle',
+        defaultMessage: 'Select area of the vehicle that was damaged',
     },
-    stepDetailsImpactFront: {
-        id: 'jdp.fnol.step.details.impactFront',
-        defaultMessage: 'Front',
+    stepDetailsImpactInstruction: {
+        id: 'jdp.fnol.step.details.impactInstruction',
+        defaultMessage: 'Tap the car to mark each damaged area.',
     },
-    stepDetailsImpactRear: {
-        id: 'jdp.fnol.step.details.impactRear',
-        defaultMessage: 'Rear',
+    stepDetailsDamageTypeLabel: {
+        id: 'jdp.fnol.step.details.damageTypeLabel',
+        defaultMessage: 'Select type of damage',
     },
-    stepDetailsImpactLeft: {
-        id: 'jdp.fnol.step.details.impactLeft',
+    areaFrontLeft: {
+        id: 'jdp.fnol.area.frontLeft',
+        defaultMessage: 'Front left',
+    },
+    areaFrontCenter: {
+        id: 'jdp.fnol.area.frontCenter',
+        defaultMessage: 'Front center',
+    },
+    areaFrontRight: {
+        id: 'jdp.fnol.area.frontRight',
+        defaultMessage: 'Front right',
+    },
+    areaLeftSide: {
+        id: 'jdp.fnol.area.leftSide',
         defaultMessage: 'Left side',
     },
-    stepDetailsImpactRight: {
-        id: 'jdp.fnol.step.details.impactRight',
+    areaRightSide: {
+        id: 'jdp.fnol.area.rightSide',
         defaultMessage: 'Right side',
     },
-    stepDetailsImpactMultiple: {
-        id: 'jdp.fnol.step.details.impactMultiple',
-        defaultMessage: 'Multiple / unclear',
+    areaRearLeft: {
+        id: 'jdp.fnol.area.rearLeft',
+        defaultMessage: 'Rear left',
+    },
+    areaRearCenter: {
+        id: 'jdp.fnol.area.rearCenter',
+        defaultMessage: 'Rear center',
+    },
+    areaRearRight: {
+        id: 'jdp.fnol.area.rearRight',
+        defaultMessage: 'Rear right',
+    },
+    areaRoof: {
+        id: 'jdp.fnol.area.roof',
+        defaultMessage: 'Roof',
+    },
+    damageScratch: {
+        id: 'jdp.fnol.damage.scratch',
+        defaultMessage: 'Scratch',
+    },
+    damageDent: {
+        id: 'jdp.fnol.damage.dent',
+        defaultMessage: 'Dent',
+    },
+    damageCrack: {
+        id: 'jdp.fnol.damage.crack',
+        defaultMessage: 'Crack',
+    },
+    damageBrokenLight: {
+        id: 'jdp.fnol.damage.brokenLight',
+        defaultMessage: 'Broken light',
+    },
+    damageBrokenMirror: {
+        id: 'jdp.fnol.damage.brokenMirror',
+        defaultMessage: 'Broken mirror',
+    },
+    damageShattered: {
+        id: 'jdp.fnol.damage.shattered',
+        defaultMessage: 'Shattered glass',
+    },
+    damageBentFrame: {
+        id: 'jdp.fnol.damage.bentFrame',
+        defaultMessage: 'Bent frame',
+    },
+    damageOther: {
+        id: 'jdp.fnol.damage.other',
+        defaultMessage: 'Other',
     },
     stepDetailsDriveableLabel: {
         id: 'jdp.fnol.step.details.driveableLabel',

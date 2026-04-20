@@ -1,14 +1,16 @@
-export type HttpMethod = 'get' | 'post' | 'put' | 'delete' | 'patch';
+export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 
 export interface CompositeSubRequest {
     method: HttpMethod;
     uri: string;
     body?: unknown;
     vars?: Array<{ name: string; path?: string }>;
-    actAsQuery?: boolean;
+    includeResponse?: boolean;
+    parameters?: Record<string, unknown>;
 }
 
 export interface CompositeRequestBody {
+    requestTag?: string;
     requests: CompositeSubRequest[];
 }
 

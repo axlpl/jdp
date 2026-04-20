@@ -1,14 +1,16 @@
 import React, { Fragment } from 'react';
-import { Link } from 'react-router-dom';
 
+import { Button } from '@jutro/components';
 import { useTranslator } from '@jutro/locale';
 
 import messages from '../app/App.messages';
+import { useAuth } from '../features/auth/AuthContext';
 
 import styles from '../app/App.module.scss';
 
 export const HelpPopoverItems = () => {
     const translate = useTranslator();
+    const { isAuthenticated, username, logout } = useAuth();
 
     return (
         <Fragment>
@@ -18,15 +20,30 @@ export const HelpPopoverItems = () => {
             <p className={styles.helpComponent}>
                 {translate(messages.helpGwCloudDescription)}
             </p>
-            <Link
+            <a
                 className={styles.helpLink}
                 href="https://docs.guidewire.com/"
                 target="_blank"
                 rel="noopener noreferrer"
-                to="/"
             >
                 {translate(messages.helpReadMore)}
-            </Link>
+            </a>
+
+            {isAuthenticated && (
+                <div className={styles.helpComponent}>
+                    <p className={styles.helpComponent}>
+                        {translate(messages.signedInAs, {
+                            username: username ?? '',
+                        })}
+                    </p>
+                    <Button
+                        id="helpPopoverLogout"
+                        variant="tertiary"
+                        onClick={logout}
+                        label={messages.avatarLogout}
+                    />
+                </div>
+            )}
         </Fragment>
     );
 };

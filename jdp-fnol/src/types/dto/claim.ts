@@ -17,7 +17,7 @@ export interface ClaimCreateAttributesDto {
     policyExpirationDate: string;
     lossDescription?: string;
     lossLocation?: string;
-    pointOfImpact?: string;
+    impactAreas?: Array<{ area: string; damageType: string | null }>;
     vehicleDriveable?: boolean;
     reporterPhone?: string;
     injuriesInvolved?: boolean;

@@ -20,7 +20,8 @@ export const getPolicies = async (): Promise<Policy[]> => {
     }
 
     const compositeRequest: CompositeRequestBody = {
-        requests: [{ method: 'get', uri: '/policy/v1/policies' }],
+        requestTag: 'jdp-fnol:getPolicies',
+        requests: [{ method: 'GET', uri: '/policy/v1/policies' }],
     };
 
     const { responses } = await executeComposite('pc', compositeRequest);
@@ -29,6 +30,24 @@ export const getPolicies = async (): Promise<Policy[]> => {
     >(responses[0], 'getPolicies');
 
     return listBody.data.map(toPolicy);
+};
+
+export const verifyCredentials = async (): Promise<void> => {
+    if (runtimeConfig.useMocks) {
+        return;
+    }
+
+    const compositeRequest: CompositeRequestBody = {
+        requestTag: 'jdp-fnol:verifyCredentials',
+        requests: [
+            {
+                method: 'GET',
+                uri: '/policy/v1/policies?pageSize=1',
+            },
+        ],
+    };
+
+    await executeComposite('pc', compositeRequest);
 };
 
 export const getPolicy = async (policyNumber: string): Promise<Policy> => {
@@ -51,9 +70,10 @@ export const getPolicy = async (policyNumber: string): Promise<Policy> => {
     }
 
     const compositeRequest: CompositeRequestBody = {
+        requestTag: `jdp-fnol:getPolicy:${policyNumber}`,
         requests: [
             {
-                method: 'get',
+                method: 'GET',
                 uri: `/policy/v1/policies/${encodeURIComponent(policyNumber)}`,
             },
         ],

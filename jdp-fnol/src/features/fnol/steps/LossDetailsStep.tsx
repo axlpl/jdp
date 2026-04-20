@@ -1,39 +1,116 @@
-import React, { useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 
 import {
+    DropdownSelectField,
     InputField,
-    RadioButtonCardField,
     RadioField,
     TextAreaField,
 } from '@jutro/legacy/components';
 import { useTranslator } from '@jutro/locale';
 import { WizardPage } from '@jutro/wizard-next';
 
-import type { FnolDraft, PointOfImpact } from '../../../types/domain';
+import type {
+    DamageType,
+    FnolDraft,
+    ImpactArea,
+    VehicleArea,
+} from '../../../types/domain';
+import { VehicleImpactPicker } from '../components/VehicleImpactPicker';
 import { useFnol } from '../FnolContext';
 import { useFlow } from '../flow/FlowContext';
 import messages from '../Fnol.messages';
 
 import styles from '../Fnol.module.scss';
 
-const impactOptions = [
-    { id: 'front', code: 'front', iconName: 'gw-arrow-forward', secondaryLabel: 'Front' },
-    { id: 'rear', code: 'rear', iconName: 'gw-keyboard-backspace', secondaryLabel: 'Rear' },
-    { id: 'left', code: 'left', iconName: 'gw-chevron-left', secondaryLabel: 'Left' },
-    { id: 'right', code: 'right', iconName: 'gw-chevron-right', secondaryLabel: 'Right' },
-    { id: 'multiple', code: 'multiple', iconName: 'gw-more-horizontal', secondaryLabel: 'Multiple' },
+const AREA_MESSAGE: Record<VehicleArea, typeof messages.areaFrontLeft> = {
+    frontLeft: messages.areaFrontLeft,
+    frontCenter: messages.areaFrontCenter,
+    frontRight: messages.areaFrontRight,
+    leftSide: messages.areaLeftSide,
+    rightSide: messages.areaRightSide,
+    rearLeft: messages.areaRearLeft,
+    rearCenter: messages.areaRearCenter,
+    rearRight: messages.areaRearRight,
+    roof: messages.areaRoof,
+};
+
+const DAMAGE_TYPES: DamageType[] = [
+    'scratch',
+    'dent',
+    'crack',
+    'brokenLight',
+    'brokenMirror',
+    'shattered',
+    'bentFrame',
+    'other',
 ];
 
-const yesNoValues = [
-    { code: 'yes', name: 'Yes' },
-    { code: 'no', name: 'No' },
-];
+const DAMAGE_MESSAGE: Record<DamageType, typeof messages.damageScratch> = {
+    scratch: messages.damageScratch,
+    dent: messages.damageDent,
+    crack: messages.damageCrack,
+    brokenLight: messages.damageBrokenLight,
+    brokenMirror: messages.damageBrokenMirror,
+    shattered: messages.damageShattered,
+    bentFrame: messages.damageBentFrame,
+    other: messages.damageOther,
+};
 
 export const LossDetailsStep = () => {
     const translator = useTranslator();
     const { draft } = useFnol();
     const flow = useFlow<FnolDraft>();
     const [showError, setShowError] = useState(false);
+
+    const selectedAreaSet = useMemo(
+        () => new Set(draft.impactAreas.map(a => a.area)),
+        [draft.impactAreas]
+    );
+
+    const areaLabel = useCallback(
+        (area: VehicleArea) => translator(AREA_MESSAGE[area]),
+        [translator]
+    );
+
+    const damageOptions = useMemo(
+        () =>
+            DAMAGE_TYPES.map(type => ({
+                code: type,
+                name: translator(DAMAGE_MESSAGE[type]),
+            })),
+        [translator]
+    );
+
+    const yesNoValues = useMemo(
+        () => [
+            { code: 'yes', name: translator(messages.reviewYes) },
+            { code: 'no', name: translator(messages.reviewNo) },
+        ],
+        [translator]
+    );
+
+    const handleToggleArea = useCallback(
+        (area: VehicleArea) => {
+            const exists = draft.impactAreas.some(a => a.area === area);
+            const next: ImpactArea[] = exists
+                ? draft.impactAreas.filter(a => a.area !== area)
+                : [...draft.impactAreas, { area, damageType: null }];
+
+            flow.setValue('impactAreas', next);
+        },
+        [draft.impactAreas, flow]
+    );
+
+    const handleDamageTypeChange = useCallback(
+        (area: VehicleArea, damageType: DamageType) => {
+            const next = draft.impactAreas.map(entry =>
+                entry.area === area ? { ...entry, damageType } : entry
+            );
+
+            flow.setValue('impactAreas', next);
+        },
+        [draft.impactAreas, flow]
+    );
 
     const handleNext = (): boolean => {
         const ready =
@@ -54,16 +131,6 @@ export const LossDetailsStep = () => {
             : draft.vehicleDriveable
             ? 'yes'
             : 'no';
-
-    const displayedImpactOptions = impactOptions.map(option => ({
-        ...option,
-        displayName: translator({
-            id: `jdp.fnol.step.details.impact${option.code
-                .charAt(0)
-                .toUpperCase()}${option.code.slice(1)}`,
-            defaultMessage: option.secondaryLabel,
-        }),
-    }));
 
     return (
         <WizardPage
@@ -103,18 +170,47 @@ export const LossDetailsStep = () => {
                     showRequired
                 />
 
-                <RadioButtonCardField
-                    id="pointOfImpact"
-                    label={messages.stepDetailsImpactLabel}
-                    availableValues={displayedImpactOptions}
-                    value={draft.pointOfImpact ?? undefined}
-                    onValueChange={(value: string) =>
-                        flow.setValue(
-                            'pointOfImpact',
-                            value as PointOfImpact
-                        )
-                    }
-                />
+                <section className={styles.impactSection}>
+                    <h4 className={styles.subsectionTitle}>
+                        {translator(messages.stepDetailsImpactTitle)}
+                    </h4>
+                    <VehicleImpactPicker
+                        selectedAreas={selectedAreaSet}
+                        onToggle={handleToggleArea}
+                        areaLabel={areaLabel}
+                        instruction={translator(
+                            messages.stepDetailsImpactInstruction
+                        )}
+                    />
+
+                    {draft.impactAreas.length > 0 && (
+                        <div className={styles.damageList}>
+                            {draft.impactAreas.map(entry => (
+                                <div
+                                    key={entry.area}
+                                    className={styles.damageRow}
+                                >
+                                    <DropdownSelectField
+                                        id={`damageType-${entry.area}`}
+                                        label={areaLabel(entry.area)}
+                                        placeholder={
+                                            messages.stepDetailsDamageTypeLabel
+                                        }
+                                        availableValues={damageOptions}
+                                        value={entry.damageType ?? undefined}
+                                        onValueChange={(value: string) =>
+                                            handleDamageTypeChange(
+                                                entry.area,
+                                                value as DamageType
+                                            )
+                                        }
+                                        alwaysShowPlaceholder
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </section>
 
                 <RadioField
                     id="vehicleDriveable"

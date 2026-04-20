@@ -30,6 +30,16 @@ export default defineMessages({
         id: 'jdp.auth.required',
         defaultMessage: 'Please enter both username and password.',
     },
+    invalidCredentials: {
+        id: 'jdp.auth.invalidCredentials',
+        defaultMessage:
+            'The username or password is incorrect, or you do not have access to Cloud API.',
+    },
+    networkError: {
+        id: 'jdp.auth.networkError',
+        defaultMessage:
+            'We could not reach PolicyCenter. Check your VPN connection and try again.',
+    },
     logoutButton: {
         id: 'jdp.auth.logout.button',
         defaultMessage: 'Sign out',

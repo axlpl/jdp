@@ -43,7 +43,7 @@ export const Dashboard = () => {
     const { hasDraft, reset: resetDraft } = useFnol();
     const [query, setQuery] = useState('');
 
-    const handleContinueDraft = useCallback(() => {
+    const goToNewFnol = useCallback(() => {
         history.push('/fnol/new');
     }, [history]);
 
@@ -65,10 +65,6 @@ export const Dashboard = () => {
         () => policies.filter(p => matchesQuery(p, query.trim())),
         [policies, query]
     );
-
-    const handleGlobalFileClaim = useCallback(() => {
-        history.push('/fnol/new');
-    }, [history]);
 
     const renderBody = () => {
         if (status === 'loading' || status === 'idle') {
@@ -141,7 +137,7 @@ export const Dashboard = () => {
 
                     <Button
                         id="fileClaimGlobal"
-                        onClick={handleGlobalFileClaim}
+                        onClick={goToNewFnol}
                         label={translator(messages.fileAClaim)}
                     />
                 </header>
@@ -159,7 +155,7 @@ export const Dashboard = () => {
                         <div className={styles.draftBannerActions}>
                             <Button
                                 id="continueDraft"
-                                onClick={handleContinueDraft}
+                                onClick={goToNewFnol}
                                 label={translator(
                                     messages.draftBannerContinue
                                 )}

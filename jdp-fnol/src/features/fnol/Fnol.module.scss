@@ -39,6 +39,26 @@
     margin: 0;
 }
 
+.impactSection {
+    display: flex;
+    flex-direction: column;
+    gap: var(--GW-LAYOUT-4);
+    padding-top: var(--GW-LAYOUT-4);
+    border-top: 1px dashed var(--GW-BORDER-COLOR);
+}
+
+.damageList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--GW-LAYOUT-4);
+}
+
+.damageRow {
+    display: flex;
+    flex-direction: column;
+    gap: var(--GW-LAYOUT-1);
+}
+
 .otherPartySection,
 .photoSection {
     display: flex;

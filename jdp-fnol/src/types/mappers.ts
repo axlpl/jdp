@@ -69,9 +69,6 @@ const combineDateTime = (
     return `${datePart}T${time}`;
 };
 
-const defined = <T>(value: T | null | undefined): T | undefined =>
-    value === null || value === undefined ? undefined : value;
-
 export type CompleteFnolDraft = FnolDraft & {
     policyNumber: string;
     dateOfLoss: string;
@@ -98,19 +95,20 @@ export const buildClaimCreateAttributes = (
     licensePlate: policy.licensePlate,
     policyEffectiveDate: policy.effectiveDate,
     policyExpirationDate: policy.expirationDate,
-    lossDescription: defined(draft.lossDescription),
-    lossLocation: defined(draft.lossLocation),
-    pointOfImpact: defined(draft.pointOfImpact),
-    vehicleDriveable: defined(draft.vehicleDriveable),
-    reporterPhone: defined(draft.reporterPhone),
-    injuriesInvolved: defined(draft.injuriesInvolved),
-    injuryDescription: defined(draft.injuryDescription),
-    policeCalled: defined(draft.policeCalled),
-    policeReportNumber: defined(draft.policeReportNumber),
-    otherPartyName: defined(draft.otherPartyName),
-    otherPartyPhone: defined(draft.otherPartyPhone),
-    otherPartyInsurer: defined(draft.otherPartyInsurer),
-    otherPartyPlate: defined(draft.otherPartyPlate),
-    witnessDetails: defined(draft.witnessDetails),
+    lossDescription: draft.lossDescription ?? undefined,
+    lossLocation: draft.lossLocation ?? undefined,
+    impactAreas:
+        draft.impactAreas.length > 0 ? draft.impactAreas : undefined,
+    vehicleDriveable: draft.vehicleDriveable ?? undefined,
+    reporterPhone: draft.reporterPhone ?? undefined,
+    injuriesInvolved: draft.injuriesInvolved ?? undefined,
+    injuryDescription: draft.injuryDescription ?? undefined,
+    policeCalled: draft.policeCalled ?? undefined,
+    policeReportNumber: draft.policeReportNumber ?? undefined,
+    otherPartyName: draft.otherPartyName ?? undefined,
+    otherPartyPhone: draft.otherPartyPhone ?? undefined,
+    otherPartyInsurer: draft.otherPartyInsurer ?? undefined,
+    otherPartyPlate: draft.otherPartyPlate ?? undefined,
+    witnessDetails: draft.witnessDetails ?? undefined,
     photoCount: draft.photoCount > 0 ? draft.photoCount : undefined,
 });

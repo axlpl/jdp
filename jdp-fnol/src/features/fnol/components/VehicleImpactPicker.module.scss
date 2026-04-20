@@ -1,0 +1,87 @@
+$jdp-brand: #2563eb;
+$jdp-brand-ring: rgba(37, 99, 235, 0.35);
+
+.pickerWrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--GW-LAYOUT-4);
+    width: 100%;
+}
+
+.instruction {
+    margin: 0;
+    color: var(--GW-TEXT-COLOR-2);
+    text-align: center;
+}
+
+.stage {
+    position: relative;
+    width: 100%;
+    max-width: 460px;
+    aspect-ratio: 430 / 287;
+    background: transparent;
+}
+
+.carImage {
+    width: 100%;
+    height: 100%;
+    display: block;
+    user-select: none;
+    pointer-events: none;
+}
+
+.hotspot {
+    position: absolute;
+    width: 44px;
+    height: 44px;
+    margin-left: -22px;
+    margin-top: -22px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 2px solid $jdp-brand;
+    color: $jdp-brand;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.15);
+    transition: transform 160ms ease;
+}
+
+.hotspot:hover {
+    transform: scale(1.08);
+}
+
+.hotspot:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px $jdp-brand-ring,
+        0 2px 6px rgba(15, 23, 42, 0.15);
+}
+
+.hotspotSelected {
+    background: $jdp-brand;
+    color: #ffffff;
+    border-color: $jdp-brand;
+}
+
+.hotspotIcon {
+    width: 20px;
+    height: 20px;
+    display: block;
+    flex-shrink: 0;
+}
+
+@media (max-width: 480px) {
+    .hotspot {
+        width: 38px;
+        height: 38px;
+        margin-left: -19px;
+        margin-top: -19px;
+    }
+    .hotspotIcon {
+        width: 17px;
+        height: 17px;
+    }
+}

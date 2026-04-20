@@ -44,9 +44,10 @@ export const getLossCauses = async (): Promise<LossCause[]> => {
     }
 
     const compositeRequest: CompositeRequestBody = {
+        requestTag: 'jdp-fnol:getLossCauses',
         requests: [
             {
-                method: 'get',
+                method: 'GET',
                 uri: '/common/v1/typelists/LossCause',
             },
         ],
@@ -101,9 +102,10 @@ export const submitFnol = async (
     };
 
     const compositeRequest: CompositeRequestBody = {
+        requestTag: `jdp-fnol:submitFnol:${draft.policyNumber}`,
         requests: [
             {
-                method: 'post',
+                method: 'POST',
                 uri: '/claim/v1/claims',
                 body: requestBody,
             },

@@ -19,6 +19,18 @@ export const registerCredentialsProvider = (
     credentialsGetter = getter;
 };
 
+type UnauthorizedHandler = () => void;
+
+let unauthorizedHandler: UnauthorizedHandler = () => {
+    /* noop until registered */
+};
+
+export const registerUnauthorizedHandler = (
+    handler: UnauthorizedHandler
+): void => {
+    unauthorizedHandler = handler;
+};
+
 const endpointFor = (flavor: CompositeFlavor): string => {
     const base =
         flavor === 'pc'
@@ -96,6 +108,10 @@ export const executeComposite = async (
         const errorBody = await response
             .json()
             .catch(() => ({}) as Record<string, unknown>);
+
+        if (response.status === 401) {
+            unauthorizedHandler();
+        }
 
         throw new CompositeRequestError(
             `Composite request to ${flavor} failed with status ${response.status}`,

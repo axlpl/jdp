@@ -34,6 +34,10 @@ export default defineMessages({
         id: 'jdp.app.avatar.logout',
         defaultMessage: 'Sign out',
     },
+    signedInAs: {
+        id: 'jdp.app.signedInAs',
+        defaultMessage: 'Signed in as {username}',
+    },
     avatarDashboard: {
         id: 'jdp.app.avatar.dashboard',
         defaultMessage: 'Go to Dashboard',

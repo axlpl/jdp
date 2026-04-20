@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 
 import {
     InputField,
@@ -20,10 +20,13 @@ export const OtherDetailsStep = () => {
     const { draft } = useFnol();
     const flow = useFlow<FnolDraft>();
 
-    const yesNoValues = [
-        { code: 'yes', name: translator(messages.reviewYes) },
-        { code: 'no', name: translator(messages.reviewNo) },
-    ];
+    const yesNoValues = useMemo(
+        () => [
+            { code: 'yes', name: translator(messages.reviewYes) },
+            { code: 'no', name: translator(messages.reviewNo) },
+        ],
+        [translator]
+    );
 
     const toCode = (value: boolean | null): string | undefined =>
         value == null ? undefined : value ? 'yes' : 'no';

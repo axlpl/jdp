@@ -28,12 +28,31 @@ export type LossCause = {
     displayName: string;
 };
 
-export type PointOfImpact =
-    | 'front'
-    | 'rear'
-    | 'left'
-    | 'right'
-    | 'multiple';
+export type VehicleArea =
+    | 'frontLeft'
+    | 'frontCenter'
+    | 'frontRight'
+    | 'leftSide'
+    | 'rightSide'
+    | 'rearLeft'
+    | 'rearCenter'
+    | 'rearRight'
+    | 'roof';
+
+export type DamageType =
+    | 'scratch'
+    | 'dent'
+    | 'crack'
+    | 'brokenLight'
+    | 'brokenMirror'
+    | 'shattered'
+    | 'bentFrame'
+    | 'other';
+
+export type ImpactArea = {
+    area: VehicleArea;
+    damageType: DamageType | null;
+};
 
 export type FnolDraft = {
     policyNumber: string | null;
@@ -42,7 +61,7 @@ export type FnolDraft = {
     lossCause: LossCauseCode | null;
     lossDescription: string | null;
     lossLocation: string | null;
-    pointOfImpact: PointOfImpact | null;
+    impactAreas: ImpactArea[];
     vehicleDriveable: boolean | null;
     reporterPhone: string | null;
     injuriesInvolved: boolean | null;
